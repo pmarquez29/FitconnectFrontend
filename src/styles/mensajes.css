@@ -1,0 +1,160 @@
+.mensajes-container {
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
+    height: calc(100vh - 80px); /* ajusta según header */
+    background: #f9fafb;
+}
+
+.chat-list {
+    border-right: 1px solid #e5e7eb;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.chat-list h2 {
+    margin-bottom: 1rem;
+}
+
+.chat-list input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.chat-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chat-list li {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.chat-list li:hover,
+.chat-list li.active {
+    background: #e5e7eb;
+}
+
+.chat-list img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+}
+
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+}
+
+.chat-window.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #6b7280;
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.chat-header img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.mensaje {
+    margin: 0.5rem 0;
+    padding: 0.5rem 0.75rem;
+    background: #e5e7eb;
+    border-radius: 8px;
+    max-width: 70%;
+}
+
+.mensaje.propio {
+    background: #2563eb;
+    color: white;
+    margin-left: auto;
+}
+
+.mensaje span {
+    font-size: 0.75rem;
+    color: #6b7280;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.chat-input {
+    display: flex;
+    margin-top: 0.5rem;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 6px 0 0 6px;
+}
+
+.chat-input button {
+    padding: 0.75rem 1rem;
+    border: none;
+    background: #2563eb;
+    color: white;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+}
+
+.alumno-info {
+    padding: 1rem;
+    border-left: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.alumno-info img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 0.75rem;
+}
+
+.alumno-info .progreso {
+    background: #e5e7eb;
+    border-radius: 6px;
+    height: 8px;
+    margin: 0.5rem 0;
+}
+
+.alumno-info .progreso .bar {
+    background: #16a34a;
+    height: 100%;
+    border-radius: 6px;
+}
+
+.alumno-info.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+}

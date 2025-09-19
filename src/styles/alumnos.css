@@ -1,0 +1,175 @@
+.alumnos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-bar {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.search-bar .icon {
+    margin-left: -1.8rem;
+}
+
+.alumnos-filter {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.alumnos-filter button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #2563eb;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+}
+
+.alumnos-filter button.active {
+    background: #2563eb;
+    color: white;
+}
+
+.alumnos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.alumno-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    text-align: center;
+    position: relative;
+}
+
+.alumno-card .disciplina {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #2563eb;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+.alumno-foto {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 1rem auto;
+    object-fit: cover;
+}
+
+.progreso {
+    background: #e5e7eb;
+    border-radius: 6px;
+    height: 8px;
+    margin: 0.5rem 0;
+}
+
+.progreso .bar {
+    background: #2563eb;
+    height: 100%;
+    border-radius: 6px;
+}
+
+.codigo {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin: 0.5rem 0;
+}
+
+.acciones {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 0.5rem;
+}
+
+.acciones button {
+    border: none;
+    background: #f3f4f6;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.acciones button:hover {
+    background: #e5e7eb;
+}
+
+.btn-add {
+    margin-top: 2rem;
+    padding: 0.75rem 1.5rem;
+    background: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal form input,
+.modal form select {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.modal form button {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.modal .btn-secondary {
+    background: #e5e7eb;
+}
+
+.credenciales {
+    text-align: center;
+}
+
+.credenciales p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}

@@ -1,0 +1,91 @@
+.rutinas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rutinas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.rutina-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.rutina-card:hover {
+    transform: scale(1.02);
+}
+
+.rutina-card.add-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #2563eb;
+    background: #f3f4f6;
+}
+
+.rutina-img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+}
+
+.rutina-info {
+    padding: 1rem;
+}
+
+.modal-large {
+    width: 600px;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    cursor: pointer;
+}
+
+.ejercicio-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ejercicio-actions button {
+    margin-left: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
