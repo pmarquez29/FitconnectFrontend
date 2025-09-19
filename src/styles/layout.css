@@ -1,0 +1,66 @@
+.layout {
+    display: flex;
+}
+
+.sidebar {
+    width: 220px;
+    background: #1e293b;
+    color: white;
+    height: 100vh;
+    padding: 1rem;
+}
+
+.sidebar .logo {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 1rem 0;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.search-bar .icon {
+    margin-left: -1.8rem;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
