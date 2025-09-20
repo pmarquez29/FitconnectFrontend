@@ -17,3 +17,33 @@ export const addAlumno = async (alumnoData) => {
     });
     return response.data; // devuelve { alumnoId, credenciales }
 };
+
+const getAuthHeader = () => ({
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+});
+
+export const getAlumnoById = async (id) => {
+    const res = await axios.get(`${API_URL}/alumnos/${id}`, getAuthHeader());
+    return res.data;
+};
+
+export const getAlumnoProgreso = async (id) => {
+    const res = await axios.get(`${API_URL}/alumnos/${id}/progreso`, getAuthHeader());
+    return res.data;
+};
+
+export const getAlumnoActividad = async (id) => {
+    const res = await axios.get(`${API_URL}/alumnos/${id}/actividad`, getAuthHeader());
+    return res.data;
+};
+
+export const getAlumnoHistorialRutinas = async (id) => {
+    const res = await axios.get(`${API_URL}/alumnos/${id}/historial-rutinas`, getAuthHeader());
+    return res.data;
+};
+
+export const getAlumnoComparativoRutinas = async (id) => {
+    const res = await axios.get(`${API_URL}/alumnos/${id}/comparativo-rutinas`, getAuthHeader());
+    return res.data;
+};
+

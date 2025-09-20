@@ -1,0 +1,83 @@
+.perfil-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.perfil-header img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.alumno-datos {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 1rem;
+}
+
+.rutina-resumen .rutina-box {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 1rem;
+}
+
+.progreso-chart, .actividad-reciente {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin: 1rem 0;
+}
+
+.actividad-reciente table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.actividad-reciente th, .actividad-reciente td {
+    border: 1px solid #e5e7eb;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.actividad-reciente th {
+    background: #f3f4f6;
+}
+
+.historial-rutinas {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin: 1rem 0;
+}
+
+.historial-rutinas table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+}
+
+.historial-rutinas th, .historial-rutinas td {
+    border: 1px solid #e5e7eb;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.historial-rutinas th {
+    background: #f3f4f6;
+}
+.comparativo-rutinas {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin: 1rem 0;
+}
