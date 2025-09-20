@@ -4,15 +4,26 @@ const AlumnoInfoCard = ({ alumno }) => {
     if (!alumno) return <div className="alumno-info empty">Selecciona un alumno</div>;
 
     return (
-        <div className="alumno-info">
-            <img src={alumno.foto || "/assets/avatar.png"} alt={alumno.nombre} />
-            <h3>{alumno.nombre} {alumno.apellido}</h3>
-            <p><strong>Disciplina:</strong> {alumno.disciplina}</p>
-            <p><strong>Rutina:</strong> {alumno.rutina_asignada || "No asignada"}</p>
-            <div className="progreso">
-                <div className="bar" style={{ width: `${alumno.progreso || 0}%` }}></div>
+        <div className="alumno-info-card">
+            <div className="alumno-header">
+                <h4>GIMNASIO</h4>
             </div>
-            <p className="codigo">Código: {alumno.codigo_acceso}</p>
+            <img
+                src={alumno.foto || "/assets/avatar.png"}
+                alt={alumno.nombre}
+                className="alumno-avatar"
+            />
+            <h3>{alumno.nombre} {alumno.apellido}</h3>
+            <p><strong>Email:</strong> {alumno.email}</p>
+
+            {/* Como rutina_asignada y progreso no existen en tu tabla, puedes poner placeholders */}
+            <p><strong>Rutina actual:</strong> {"No asignada"}</p>
+
+            <div className="progress-bar">
+                <div className="progress" style={{ width: `0%` }}></div>
+            </div>
+
+            <button className="perfil-btn">Ver perfil completo</button>
         </div>
     );
 };

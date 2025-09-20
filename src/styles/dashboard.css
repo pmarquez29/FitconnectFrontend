@@ -1,24 +1,133 @@
+/* ====== Variables de color ====== */
+:root {
+    --primary: #217EFD;
+    --primary-light: #4a97ff;
+    --primary-bg: #f5f9ff;
+    --text: #333;
+    --text-light: #666;
+    --border: #e5e7eb;
+    --positive: #16a34a;
+    --negative: #dc2626;
+    --radius: 10px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ====== Dashboard general ====== */
 .dashboard-cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin: 1rem 0;
-}
-
-.card {
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    text-align: center;
-}
-
-.recent-activity, .top-students, .weekly-progress {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
     margin: 2rem 0;
-    background: white;
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.dashboard-cards .card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-cards .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-cards .card .icon {
+    font-size: 1.8rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-cards h3 {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin: 0.3rem 0;
+}
+
+.dashboard-cards p {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+/* ====== Actividad reciente ====== */
+.recent-activity {
+    margin: 2rem 0;
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.recent-activity h2 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+.recent-activity ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recent-activity li {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.recent-activity li:last-child {
+    border-bottom: none;
+}
+
+.recent-activity strong {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.recent-activity span.status {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-weight: 500;
+    display: inline-block;
+    margin-top: 0.2rem;
+}
+
+.status.done {
+    background: #dcfce7;
+    color: var(--positive);
+}
+
+.status.pending {
+    background: #fef2f2;
+    color: var(--negative);
+}
+
+.recent-activity small {
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+/* ====== Mejores estudiantes ====== */
+.top-students {
+    margin: 2rem 0;
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+}
+
+.top-students h2 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: var(--primary);
 }
 
 .top-students table {
@@ -26,7 +135,65 @@
     border-collapse: collapse;
 }
 
-.top-students th, .top-students td {
-    padding: 0.5rem;
-    border-bottom: 1px solid #e5e7eb;
+.top-students th,
+.top-students td {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.top-students th {
+    background: var(--primary-bg);
+    font-weight: 600;
+    color: var(--text);
+}
+
+.top-students tr:last-child td {
+    border-bottom: none;
+}
+
+.top-students td.positive {
+    color: var(--positive);
+    font-weight: 600;
+}
+
+.top-students td.negative {
+    color: var(--negative);
+    font-weight: 600;
+}
+
+/* ====== Progreso semanal ====== */
+.weekly-progress {
+    margin: 2rem 0;
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+.weekly-progress h2 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+/* ====== Responsividad ====== */
+@media (max-width: 768px) {
+    .dashboard-cards {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .recent-activity li {
+        font-size: 0.9rem;
+    }
+
+    .top-students table {
+        font-size: 0.9rem;
+    }
 }

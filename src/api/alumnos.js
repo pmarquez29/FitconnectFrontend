@@ -15,7 +15,7 @@ export const addAlumno = async (alumnoData) => {
     const response = await axios.post(`${API_URL}/alumnos`, alumnoData, {
         headers: { Authorization: `Bearer ${token}` }
     });
-    return response.data; // devuelve { alumnoId, credenciales }
+    return response.data;
 };
 
 const getAuthHeader = () => ({

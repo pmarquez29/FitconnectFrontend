@@ -1,56 +1,120 @@
-.layout {
-    display: flex;
+/* ===== Variables de color (coherentes con dashboard.css) ===== */
+:root {
+    --primary: #217EFD;
+    --primary-light: #4a97ff;
+    --primary-bg: #f5f9ff;
+    --text: #333;
+    --text-light: #666;
+    --border: #e5e7eb;
+    --radius: 10px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
+/* ===== Layout general ===== */
+.layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--primary-bg);
+}
+
+/* ===== Sidebar ===== */
 .sidebar {
-    width: 220px;
-    background: #1e293b;
-    color: white;
+    width: 240px;
+    background: #fff;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: 0;
     height: 100vh;
-    padding: 1rem;
 }
 
 .sidebar .logo {
-    font-size: 1.5rem;
+    text-align: center;
     margin-bottom: 2rem;
 }
 
-.sidebar ul {
+.sidebar .logo img {
+    max-width: 120px;
+}
+
+.sidebar nav ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
-.sidebar li {
-    margin: 1rem 0;
+.sidebar nav li {
+    margin-bottom: 0.8rem;
 }
 
-.sidebar a {
-    color: white;
+.sidebar nav a {
+    display: block;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius);
+    color: var(--text);
     text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
+.sidebar nav a:hover {
+    background: var(--primary-bg);
+    color: var(--primary);
+}
+
+.sidebar nav a.active {
+    background: var(--primary);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ===== Content principal ===== */
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+}
+
+/* ===== Header ===== */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    background: white;
-    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .search-bar {
     display: flex;
     align-items: center;
+    background: var(--primary-bg);
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius);
+    flex: 1;
+    max-width: 350px;
 }
 
 .search-bar input {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 0.95rem;
+    color: var(--text);
 }
 
 .search-bar .icon {
-    margin-left: -1.8rem;
+    color: var(--primary);
+    margin-left: 0.5rem;
 }
 
 .actions {
@@ -59,8 +123,123 @@
     gap: 1rem;
 }
 
-.avatar {
-    width: 32px;
-    height: 32px;
+/* ===== Notificaciones ===== */
+.notification {
+    position: relative;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.notification .dropdown {
+    position: absolute;
+    top: 130%;
+    right: 0;
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+    font-size: 0.9rem;
+    min-width: 200px;
+    z-index: 20;
+}
+
+/* ===== Usuario ===== */
+.user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.user .avatar {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
+    object-fit: cover;
+}
+
+.user span {
+    font-weight: 500;
+    color: var(--text);
+}
+
+.user .dropdown {
+    position: absolute;
+    top: 130%;
+    right: 0;
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 0.8rem 0;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    z-index: 20;
+}
+
+.user .dropdown button {
+    background: none;
+    border: none;
+    padding: 0.6rem 1rem;
+    text-align: left;
+    font-size: 0.9rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.user .dropdown button:hover {
+    background: var(--primary-bg);
+    color: var(--primary);
+}
+
+/* ===== Responsividad ===== */
+@media (max-width: 900px) {
+    .sidebar {
+        position: fixed;
+        left: -240px;
+        top: 0;
+        transition: left 0.3s ease;
+        z-index: 30;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+
+    .header {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .search-bar {
+        max-width: 200px;
+    }
+
+    .user span {
+        display: none; /* Solo avatar en mobile */
+    }
+}
+
+/* Botón hamburguesa */
+.hamburger {
+    display: none;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    margin-right: 1rem;
+}
+
+@media (max-width: 900px) {
+    .hamburger {
+        display: block;
+    }
 }

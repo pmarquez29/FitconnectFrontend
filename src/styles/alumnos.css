@@ -1,175 +1,199 @@
+/* ===========================
+   Estilos para AlumnosPage
+   =========================== */
 .alumnos-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.alumnos-header h1 {
+    font-size: 2rem;
+    color: #2563eb; /* azul llamativo */
+    margin: 0;
+}
+
+.alumnos-header p {
+    color: #6b7280;
+    margin: 0.2rem 0 0;
+    font-size: 0.95rem;
 }
 
 .search-bar {
-    margin: 1rem 0;
     display: flex;
     align-items: center;
+    margin: 1.5rem 0;
+    background: #fff;
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    border: 1px solid #e5e7eb;
+    max-width: 400px;
 }
 
 .search-bar input {
     flex: 1;
-    padding: 0.5rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    background: transparent;
 }
 
 .search-bar .icon {
-    margin-left: -1.8rem;
+    margin-left: 0.6rem;
+    font-size: 1.2rem;
+    color: #9ca3af;
 }
 
+.btn-add {
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.3rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 2rem;
+    transition: background 0.2s ease;
+}
+
+.btn-add:hover {
+    background: #4338ca;
+}
+
+/* ===========================
+   Estilos para filtros (tabs)
+   =========================== */
 .alumnos-filter {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    gap: 0.8rem;
+    margin: 1rem 0 2rem;
+    flex-wrap: wrap;
 }
 
 .alumnos-filter button {
+    background: transparent;
+    border: 2px solid #e5e7eb;
     padding: 0.5rem 1rem;
-    border: 1px solid #2563eb;
-    border-radius: 6px;
-    background: white;
+    border-radius: 8px;
+    font-size: 0.95rem;
     cursor: pointer;
+    transition: all 0.2s ease;
+    color: #374151;
+}
+
+.alumnos-filter button:hover {
+    border-color: #2563eb;
+    color: #2563eb;
 }
 
 .alumnos-filter button.active {
     background: #2563eb;
-    color: white;
+    color: #fff;
+    border-color: #2563eb;
 }
 
+/* ===========================
+   Grid de alumnos
+   =========================== */
 .alumnos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: 1.5rem;
 }
 
+/* ===========================
+   Tarjeta de alumno
+   =========================== */
 .alumno-card {
-    background: white;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.5rem 1rem;
     text-align: center;
-    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #f3f4f6;
+}
+
+.alumno-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
 }
 
 .alumno-card .disciplina {
-    position: absolute;
-    top: 10px;
-    left: 10px;
     background: #2563eb;
-    color: white;
-    padding: 0.25rem 0.5rem;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.7rem;
     border-radius: 6px;
-    font-size: 0.8rem;
+    display: inline-block;
+    margin-bottom: 1rem;
 }
 
-.alumno-foto {
-    width: 80px;
-    height: 80px;
+.alumno-card img.alumno-foto {
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-    margin: 1rem auto;
     object-fit: cover;
+    margin-bottom: 0.8rem;
+    border: 3px solid #2563eb;
 }
 
+.alumno-card h3 {
+    margin: 0.3rem 0;
+    font-size: 1.2rem;
+    color: #111827;
+}
+
+.alumno-card p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.alumno-card .codigo {
+    font-weight: 600;
+    margin-top: 0.8rem;
+    color: #374151;
+}
+
+/* ===========================
+   Barra de progreso
+   =========================== */
 .progreso {
     background: #e5e7eb;
-    border-radius: 6px;
+    border-radius: 8px;
     height: 8px;
-    margin: 0.5rem 0;
+    overflow: hidden;
+    margin: 1rem 0;
 }
 
 .progreso .bar {
-    background: #2563eb;
     height: 100%;
-    border-radius: 6px;
+    background: #22c55e; /* verde */
+    transition: width 0.3s ease;
 }
 
-.codigo {
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin: 0.5rem 0;
-}
-
+/* ===========================
+   Acciones dentro de la card
+   =========================== */
 .acciones {
     display: flex;
     justify-content: space-around;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
+    gap: 0.4rem;
 }
 
 .acciones button {
+    flex: 1;
+    background: #2563eb;
     border: none;
-    background: #f3f4f6;
-    padding: 0.5rem;
+    color: white;
+    padding: 0.5rem 0.6rem;
     border-radius: 6px;
+    font-size: 0.8rem;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s ease;
 }
 
 .acciones button:hover {
-    background: #e5e7eb;
-}
-
-.btn-add {
-    margin-top: 2rem;
-    padding: 0.75rem 1.5rem;
-    background: #16a34a;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    width: 400px;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.modal form input,
-.modal form select {
-    width: 100%;
-    padding: 0.75rem;
-    margin: 0.5rem 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-.modal form button {
-    width: 100%;
-    padding: 0.75rem;
-    margin-top: 0.5rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.modal .btn-secondary {
-    background: #e5e7eb;
-}
-
-.credenciales {
-    text-align: center;
-}
-
-.credenciales p {
-    margin: 0.5rem 0;
-    font-size: 1rem;
+    background: #1d4ed8;
 }

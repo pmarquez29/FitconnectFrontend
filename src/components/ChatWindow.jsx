@@ -51,29 +51,41 @@ const ChatWindow = ({ chat, user }) => {
     return (
         <div className="chat-window">
             <div className="chat-header">
-                <img src={chat.alumno.foto || "/assets/avatar.png"} alt={chat.alumno.nombre} />
-                <h3>{chat.alumno.nombre}</h3>
+                <img
+                    src={chat.usuario.foto || "../assets/avatar.png"}
+                    alt={chat.usuario.nombre}
+                    className="chat-avatar"
+                />
+                <div>
+                    <h3>{chat.usuario.nombre}</h3>
+                    <span className="status online">Online</span>
+                </div>
             </div>
+
             <div className="chat-messages">
                 {mensajes.map((msg, i) => (
                     <div
                         key={i}
-                        className={`mensaje ${msg.remitente_id === user.id ? "propio" : ""}`}
+                        className={`mensaje-bubble ${msg.remitente_id === user.id ? "propio" : "ajeno"}`}
                     >
                         <p>{msg.contenido}</p>
-                        <span>{new Date(msg.fecha_envio).toLocaleTimeString()}</span>
+                        <span className="hora">
+                            {new Date(msg.fecha_envio).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                        </span>
                     </div>
                 ))}
                 <div ref={messagesEndRef}></div>
             </div>
+
             <form className="chat-input" onSubmit={handleSend}>
+                <button type="button" className="attach-btn">📎</button>
                 <input
                     type="text"
                     placeholder="Escribe un mensaje..."
                     value={nuevoMensaje}
                     onChange={(e) => setNuevoMensaje(e.target.value)}
                 />
-                <button type="submit">Enviar</button>
+                <button type="submit" className="send-btn">➤</button>
             </form>
         </div>
     );

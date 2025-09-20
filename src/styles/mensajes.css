@@ -1,160 +1,179 @@
-.mensajes-container {
-    display: grid;
-    grid-template-columns: 25% 50% 25%;
-    height: calc(100vh - 80px); /* ajusta según header */
-    background: #f9fafb;
-}
-
+/* --- Chat List --- */
 .chat-list {
-    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #eee;
     padding: 1rem;
-    overflow-y: auto;
+    width: 300px;
 }
 
-.chat-list h2 {
-    margin-bottom: 1rem;
+.chat-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.chat-list input {
-    width: 100%;
+.chat-search {
+    margin: 0.5rem 0 1rem;
     padding: 0.5rem;
-    margin-bottom: 1rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    border-radius: 8px;
+    border: 1px solid #ddd;
 }
 
-.chat-list ul {
+.chat-items {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.chat-list li {
+.chat-item {
     display: flex;
     align-items: center;
-    padding: 0.5rem;
+    padding: 0.6rem;
+    border-radius: 10px;
     cursor: pointer;
-    border-radius: 6px;
     transition: background 0.2s;
 }
 
-.chat-list li:hover,
-.chat-list li.active {
-    background: #e5e7eb;
+.chat-item:hover,
+.chat-item.active {
+    background: #f3f6ff;
 }
 
-.chat-list img {
+.chat-avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 0.75rem;
+    margin-right: 0.8rem;
 }
 
+.chat-info p {
+    color: #666;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.chat-time {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: #aaa;
+}
+
+/* --- Chat Window --- */
 .chat-window {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    padding: 1rem;
-}
-
-.chat-window.empty {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #6b7280;
+    flex: 1;
+    border-right: 1px solid #eee;
 }
 
 .chat-header {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    gap: 0.6rem;
 }
 
-.chat-header img {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    margin-right: 0.75rem;
+.status.online {
+    font-size: 0.8rem;
+    color: green;
 }
 
 .chat-messages {
     flex: 1;
+    padding: 1rem;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
 }
 
-.mensaje {
-    margin: 0.5rem 0;
-    padding: 0.5rem 0.75rem;
-    background: #e5e7eb;
-    border-radius: 8px;
+.mensaje-bubble {
     max-width: 70%;
+    padding: 0.6rem 0.9rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    position: relative;
 }
 
-.mensaje.propio {
-    background: #2563eb;
+.mensaje-bubble.ajeno {
+    background: #f0f0f0;
+    align-self: flex-start;
+}
+
+.mensaje-bubble.propio {
+    background: #5c6bc0;
     color: white;
-    margin-left: auto;
+    align-self: flex-end;
 }
 
-.mensaje span {
-    font-size: 0.75rem;
-    color: #6b7280;
+.mensaje-bubble .hora {
+    font-size: 0.7rem;
+    opacity: 0.7;
     display: block;
-    margin-top: 0.25rem;
+    margin-top: 0.2rem;
 }
 
 .chat-input {
     display: flex;
-    margin-top: 0.5rem;
+    padding: 0.6rem;
+    border-top: 1px solid #eee;
+    gap: 0.5rem;
 }
 
 .chat-input input {
     flex: 1;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 6px 0 0 6px;
-}
-
-.chat-input button {
-    padding: 0.75rem 1rem;
     border: none;
-    background: #2563eb;
-    color: white;
-    border-radius: 0 6px 6px 0;
-    cursor: pointer;
+    border-radius: 20px;
+    padding: 0.6rem 1rem;
+    background: #f7f7f7;
 }
 
-.alumno-info {
-    padding: 1rem;
-    border-left: 1px solid #e5e7eb;
+.attach-btn,
+.send-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+/* --- Alumno Info --- */
+.alumno-info-card {
+    background: linear-gradient(180deg, #4da6ff, #1a75ff);
+    color: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    width: 300px;
     text-align: center;
 }
 
-.alumno-info img {
-    width: 80px;
-    height: 80px;
+.alumno-avatar {
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    margin-bottom: 0.75rem;
+    margin: 1rem auto;
+    border: 3px solid white;
 }
 
-.alumno-info .progreso {
-    background: #e5e7eb;
-    border-radius: 6px;
+.progress-bar {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.progress {
+    background: #00ff88;
     height: 8px;
-    margin: 0.5rem 0;
+    border-radius: 10px;
 }
 
-.alumno-info .progreso .bar {
-    background: #16a34a;
-    height: 100%;
-    border-radius: 6px;
-}
-
-.alumno-info.empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
+.perfil-btn {
+    background: black;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
 }
