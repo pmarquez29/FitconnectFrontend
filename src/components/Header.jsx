@@ -50,7 +50,13 @@ const Header = ({ user, onToggleSidebar }) => {
                     {showUserMenu && (
                         <div className="dropdown">
                             <button>Perfil</button>
-                            <button>Cerrar sesión</button>
+                            <button onClick={
+                                () => {
+                                    localStorage.removeItem("token");
+                                    localStorage.removeItem("user");
+                                    window.location.href = "/";
+                                }
+                            }>Cerrar Sesion</button>
                         </div>
                     )}
                 </div>

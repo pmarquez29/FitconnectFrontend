@@ -6,14 +6,14 @@ import DashboardCards from "../components/DashboardCards";
 import RecentActivity from "../components/RecentActivity";
 import TopStudents from "../components/TopStudents";
 import WeeklyProgressChart from "../components/WeeklyProgressChart";
+import { Grid, Paper, Typography } from "@mui/material";
 import "../styles/layout.css";
 import "../styles/dashboard.css";
-import logo from "../assets/logo.png";
-import avatar from "../assets/avatar.jpg";
 
 const DashboardPage = () => {
     const [data, setData] = useState(null);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     useEffect(() => {
         const fetchDashboard = async () => {
@@ -27,20 +27,42 @@ const DashboardPage = () => {
         fetchDashboard();
     }, []);
 
-    if (!data) return <p>Cargando...</p>;
+
 
     return (
         <div className="layout">
-            <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+            <Sidebar
+                open={sidebarOpen}
+                setOpen={setSidebarOpen}
+                collapsed={sidebarCollapsed}
+                setCollapsed={setSidebarCollapsed}
+            />
             <main className="content">
-                <Header
-                    user={JSON.parse(localStorage.getItem("user"))}
-                    onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-                />
+                <Header />
+
                 <DashboardCards data={data} />
-                <RecentActivity actividad={data.actividad_reciente || []} />
-                <TopStudents estudiantes={data.mejor_estudiantes || []} />
-                <WeeklyProgressChart data={data.progreso_semanal || []} />
+                <RecentActivity actividad={data?.actividad_reciente || []} />
+
+                {/* Mejores alumnos y progreso semanal */}
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                    <Grid>
+                        <Paper elevation={3} sx={{ p: 2, borderRadius: 3 }}>
+                            <Typography variant="h6" gutterBottom>
+                                Mejores Alumnos
+                            </Typography>
+                            <TopStudents estudiantes={data?.mejor_estudiantes || []} />
+                        </Paper>
+                    </Grid>
+
+                    <Grid >
+                        <Paper elevation={3} sx={{ p: 2, borderRadius: 3 }}>
+                            <Typography variant="h6" gutterBottom>
+                                Progreso Semanal
+                            </Typography>
+                            <WeeklyProgressChart data={data?.progreso_semanal || []} />
+                        </Paper>
+                    </Grid>
+                </Grid>
             </main>
         </div>
     );
