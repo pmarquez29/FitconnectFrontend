@@ -32,7 +32,7 @@ const MensajesPage = () => {
                         setSearch={setSearch}
                     />
                     <ChatWindow chat={selectedChat} user={user} />
-                    <AlumnoInfoCard alumno={selectedChat?.alumno} />
+                    <AlumnoInfoCard alumno={selectedChat?.usuario} />
                 </div>
             </main>
         </div>

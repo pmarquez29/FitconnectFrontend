@@ -154,11 +154,20 @@ const AlumnosPage = () => {
     };
 
     // Event handlers for successful operations
-    const handleAlumnoAdded = () => {
+    const handleAlumnoAdded = (credenciales) => {
         setShowAddModal(false);
-        showToast("Alumno agregado exitosamente");
         loadAlumnos(true);
+
+        if (credenciales) {
+            const { email, password } = credenciales;
+            alert(
+                `✅ Alumno agregado exitosamente.\n\nCredenciales de acceso:\n📧 Email: ${email}\n🔑 Contraseña: ${password}\n\n⚠️ Guárdalas, se mostrarán solo una vez.`
+            );
+        } else {
+            showToast("Alumno agregado exitosamente");
+        }
     };
+
 
     const handleAlumnoUpdated = () => {
         setShowEditModal(false);

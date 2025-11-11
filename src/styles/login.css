@@ -1,57 +1,228 @@
-.login-page {
+/* === Layout general === */
+.login-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
-    background: #f9fafb;
+    font-family: "Poppins", sans-serif;
+    overflow: hidden;
 }
 
-.login-form {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 400px;
+/* === Columna izquierda === */
+.login-left {
+    flex: 0.9; /* más estrecho */
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 50px 80px;
+    max-width: 700px;
+    margin: 0 auto;
 }
 
-.login-form h2 {
-    margin-bottom: 1.5rem;
+.login-header {
     text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-logo {
+    width: 130px;
+    margin-bottom: 12px;
+}
+
+.portal-tag {
+    display: inline-block;
+    background: #e8edff;
+    color: #0a4ef5;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 6px 16px;
+    border-radius: 20px;
+}
+
+.login-content {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.login-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.login-subtitle {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 1rem;
+}
+
+/* === Formulario === */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
 }
 
 .login-form label {
-    display: block;
-    margin: 0.5rem 0 0.25rem;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
 }
 
 .login-form input {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
+    padding: 12px;
     border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.login-form input:focus {
+    border-color: #0a4ef5;
+    outline: none;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.forgot-password {
+    color: #0a4ef5;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
 }
 
 .login-form button {
-    width: 100%;
-    padding: 0.75rem;
+    margin-top: 10px;
+    padding: 12px;
+    background: #0a4ef5;
+    color: white;
     border: none;
     border-radius: 8px;
-    background-color: #2563eb;
-    color: white;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
+    transition: background 0.3s;
 }
 
 .login-form button:hover {
-    background-color: #1e40af;
+    background: #083cc0;
 }
 
 .error {
-    color: red;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
+    background: #ffe6e6;
+    color: #c30000;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* === Texto inferior === */
+.register-text {
     text-align: center;
+    margin-top: 25px;
+    color: #555;
+    font-size: 14px;
+}
+
+.register-link {
+    color: #0a4ef5;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+/* === Columna derecha === */
+.login-right {
+    flex: 1.1; /* más ancha */
+    position: relative;
+    overflow: hidden;
+    background: #0a4ef5;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 20, 60, 0.65);
+}
+
+.welcome-box {
+    position: relative;
+    z-index: 2;
+    max-width: 420px;
+    padding: 50px;
+    text-align: left;
+}
+
+.welcome-box h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.accent {
+    color: #ffd43b;
+}
+
+.welcome-box p {
+    font-size: 1rem;
+    color: #f0f0f0;
+    margin: 15px 0 25px 0;
+}
+
+.features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.features li {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* === Responsive === */
+@media (max-width: 992px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .login-right {
+        display: none;
+    }
+
+    .login-left {
+        padding: 40px 30px;
+    }
 }

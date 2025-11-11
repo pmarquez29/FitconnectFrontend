@@ -1,179 +1,435 @@
-/* --- Chat List --- */
+/* ===============================
+   🌟 MENSAJES PAGE LAYOUT
+=============================== */
+.mensajes-container {
+    display: grid;
+    grid-template-columns: 320px 1fr 300px;
+    height: calc(100vh - 90px);
+    background: #f9fafb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* ===============================
+   🔹 Chat List (izquierda)
+=============================== */
 .chat-list {
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #eee;
-    padding: 1rem;
-    width: 300px;
 }
 
 .chat-list-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.chat-list-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.new-chat {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 1.25rem;
+    cursor: pointer;
 }
 
 .chat-search {
-    margin: 0.5rem 0 1rem;
-    padding: 0.5rem;
-    border-radius: 8px;
-    border: 1px solid #ddd;
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.8rem 1rem;
+    outline: none;
+    font-size: 0.95rem;
 }
 
 .chat-items {
     list-style: none;
     padding: 0;
     margin: 0;
+    overflow-y: auto;
+    flex: 1;
 }
 
+/* Chat item */
 .chat-item {
     display: flex;
     align-items: center;
-    padding: 0.6rem;
-    border-radius: 10px;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
     cursor: pointer;
+    border-bottom: 1px solid #f3f4f6;
     transition: background 0.2s;
 }
 
-.chat-item:hover,
+.chat-item:hover {
+    background: #f9fafb;
+}
+
 .chat-item.active {
-    background: #f3f6ff;
+    background: #e0ebff;
 }
 
 .chat-avatar {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    margin-right: 0.8rem;
+    object-fit: cover;
+}
+
+.chat-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.chat-info strong {
+    display: block;
+    font-size: 0.95rem;
+    color: #111827;
 }
 
 .chat-info p {
-    color: #666;
-    font-size: 0.85rem;
     margin: 0;
+    font-size: 0.8rem;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .chat-time {
-    margin-left: auto;
     font-size: 0.75rem;
-    color: #aaa;
+    color: #9ca3af;
 }
 
-/* --- Chat Window --- */
+/* 💡 Notificaciones de sistema (alertas) */
+.chat-item.system {
+    background: #d1fae5;
+    border-left: 4px solid #10b981;
+}
+
+.chat-item.system .chat-avatar {
+    background: #10b981;
+    color: white;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===============================
+   🔹 Chat Window (centro)
+=============================== */
 .chat-window {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    border-right: 1px solid #eee;
+    background: #f9fafb;
+    border-right: 1px solid #e5e7eb;
 }
 
+.chat-window.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #9ca3af;
+    font-size: 1rem;
+}
+
+/* Header */
 .chat-header {
     display: flex;
     align-items: center;
+    gap: 0.8rem;
     padding: 1rem;
-    border-bottom: 1px solid #eee;
-    gap: 0.6rem;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-.status.online {
+.chat-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #111827;
+}
+
+.status {
     font-size: 0.8rem;
-    color: green;
+    color: #10b981;
 }
 
+.status.offline {
+    color: #9ca3af;
+}
+
+/* Messages */
 .chat-messages {
     flex: 1;
     padding: 1rem;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.5rem;
 }
 
 .mensaje-bubble {
-    max-width: 70%;
-    padding: 0.6rem 0.9rem;
-    border-radius: 15px;
+    max-width: 75%;
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
     font-size: 0.9rem;
+    line-height: 1.3;
     position: relative;
 }
 
-.mensaje-bubble.ajeno {
-    background: #f0f0f0;
-    align-self: flex-start;
-}
-
 .mensaje-bubble.propio {
-    background: #5c6bc0;
-    color: white;
     align-self: flex-end;
+    background: #2563eb;
+    color: white;
+    border-bottom-right-radius: 4px;
 }
 
-.mensaje-bubble .hora {
-    font-size: 0.7rem;
-    opacity: 0.7;
+.mensaje-bubble.ajeno {
+    align-self: flex-start;
+    background: #e5e7eb;
+    color: #111827;
+    border-bottom-left-radius: 4px;
+}
+
+.hora {
     display: block;
-    margin-top: 0.2rem;
+    font-size: 0.7rem;
+    color: #9ca3af;
+    margin-top: 2px;
+    text-align: right;
 }
 
+/* Input */
 .chat-input {
     display: flex;
-    padding: 0.6rem;
-    border-top: 1px solid #eee;
-    gap: 0.5rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: white;
+    border-top: 1px solid #e5e7eb;
 }
 
 .chat-input input {
     flex: 1;
     border: none;
-    border-radius: 20px;
     padding: 0.6rem 1rem;
-    background: #f7f7f7;
+    border-radius: 10px;
+    background: #f3f4f6;
+    outline: none;
+    margin: 0 0.5rem;
 }
 
 .attach-btn,
 .send-btn {
-    background: none;
+    background: transparent;
     border: none;
+    font-size: 1.3rem;
     cursor: pointer;
-    font-size: 1.2rem;
 }
 
-/* --- Alumno Info --- */
+.send-btn {
+    color: #2563eb;
+}
+
+/* ===============================
+   🔹 Alumno Info Card (derecha)
+=============================== */
 .alumno-info-card {
-    background: linear-gradient(180deg, #4da6ff, #1a75ff);
+    background: white;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-left: 1px solid #e5e7eb;
+}
+
+.alumno-header {
+    background: #2563eb;
     color: white;
-    border-radius: 15px;
-    padding: 1.5rem;
-    width: 300px;
+    width: 100%;
+    text-align: center;
+    padding: 0.3rem 0;
+    border-radius: 8px;
+    margin-bottom: 0.8rem;
+}
+
+.alumno-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.6rem;
+}
+
+.alumno-info-card h3 {
+    margin: 0.3rem 0;
+    font-size: 1.1rem;
+    color: #111827;
+}
+
+.alumno-info-card p {
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    margin: 0.8rem 0;
+    overflow: hidden;
+}
+
+.progress {
+    height: 6px;
+    background: #2563eb;
+}
+
+.perfil-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-top: auto;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.perfil-btn:hover {
+    background: #1d4ed8;
+}
+.alumno-info-card {
+    width: 340px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.alumno-header {
+    background: #1d4ed8;
+    color: #fff;
+    text-align: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.alumno-profile {
     text-align: center;
 }
 
 .alumno-avatar {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-    margin: 1rem auto;
-    border: 3px solid white;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+}
+
+.alumno-email {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.rutinas-historial h5 {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #374151;
+}
+
+.rutina-item {
+    margin-bottom: 0.6rem;
+}
+
+.rutina-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.estado {
+    font-weight: 600;
+    color: #111827;
+}
+
+.estado.completada {
+    color: #16a34a;
+}
+
+.estado.pausada {
+    color: #eab308;
 }
 
 .progress-bar {
-    background: rgba(255,255,255,0.3);
-    border-radius: 10px;
+    width: 100%;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 5px;
     overflow: hidden;
-    margin: 1rem 0;
+    margin-top: 4px;
 }
 
 .progress {
-    background: #00ff88;
-    height: 8px;
-    border-radius: 10px;
+    height: 100%;
+    transition: width 0.3s ease;
 }
 
-.perfil-btn {
-    background: black;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
+.progress.completada {
+    background: #16a34a;
+}
+
+.progress.pausada {
+    background: #eab308;
+}
+
+.acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.btn {
     border: none;
+    border-radius: 6px;
+    padding: 0.6rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #1e40af;
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
 }

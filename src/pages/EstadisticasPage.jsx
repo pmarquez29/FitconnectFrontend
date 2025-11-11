@@ -5,7 +5,12 @@ import StatsCards from "../components/StatsCards";
 import ProgressChart from "../components/ProgressChart";
 import DisciplinePieChart from "../components/DisciplinePieChart";
 import TopAlumnosTable from "../components/TopAlumnosTable";
-import { getResumen, getProgresoSemanal, getAlumnosPorDisciplina, getTopAlumnos } from "../api/estadisticas";
+import {
+    getResumen,
+    getProgresoSemanal,
+    getAlumnosPorDisciplina,
+    getTopAlumnos
+} from "../api/estadisticas";
 import "../styles/layout.css";
 import "../styles/estadisticas.css";
 
@@ -16,21 +21,32 @@ const EstadisticasPage = () => {
     const [topAlumnos, setTopAlumnos] = useState([]);
 
     useEffect(() => {
-        getResumen().then(setResumen);
-        getProgresoSemanal().then(setProgreso);
-        getAlumnosPorDisciplina().then(setDisciplinas);
-        getTopAlumnos().then(setTopAlumnos);
+        (async () => {
+            setResumen(await getResumen());
+            setProgreso(await getProgresoSemanal());
+            setDisciplinas(await getAlumnosPorDisciplina());
+            setTopAlumnos(await getTopAlumnos());
+        })();
     }, []);
+
+    const user = JSON.parse(localStorage.getItem("user"));
 
     return (
         <div className="layout">
             <Sidebar />
             <main className="content">
-                <Header user={JSON.parse(localStorage.getItem("user"))} />
+                <Header user={user} />
 
                 <div className="estadisticas-header">
-                    <h1>Estadísticas</h1>
-                    <p>{new Date().toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
+                    <div>
+                        <h1>📊 Estadísticas del Entrenamiento</h1>
+                        <p>
+                            {new Date().toLocaleDateString("es-ES", {
+                                weekday: "long", year: "numeric",
+                                month: "long", day: "numeric"
+                            })}
+                        </p>
+                    </div>
                 </div>
 
                 <StatsCards resumen={resumen} />

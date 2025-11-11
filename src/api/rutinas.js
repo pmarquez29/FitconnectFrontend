@@ -25,3 +25,5 @@ export const getRutinaById = async (id) => {
     });
     return response.data;
 };
+
+

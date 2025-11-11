@@ -22,11 +22,11 @@ const ChatList = ({ chats, selectedChat, onSelect, search, setSearch }) => {
                     .map((chat) => (
                         <li
                             key={chat.id}
-                            className={`chat-item ${selectedChat?.id === chat.id ? "active" : ""}`}
+                            className={`chat-item ${chat.tipo === "sistema" ? "system" : ""} ${selectedChat?.id === chat.id ? "active" : ""}`}
                             onClick={() => onSelect(chat)}
                         >
                             <img
-                                src={chat.usuario.foto || "/assets/avatar.png"}
+                                src={chat.usuario.foto || "/assets/logo.png"}
                                 alt={chat.usuario.nombre}
                                 className="chat-avatar"
                             />
@@ -34,8 +34,11 @@ const ChatList = ({ chats, selectedChat, onSelect, search, setSearch }) => {
                                 <strong>{chat.usuario.nombre}</strong>
                                 <p>{chat.ultimoMensaje?.contenido || "Sin mensajes"}</p>
                             </div>
-                            <span className="chat-time">12m</span>
+                            <span className="chat-time">{
+                                new Date(chat.ultimoMensaje?.fecha_envio).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                            }</span>
                         </li>
+
                     ))}
             </ul>
 

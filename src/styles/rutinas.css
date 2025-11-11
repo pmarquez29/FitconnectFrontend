@@ -1,91 +1,337 @@
+/* ===========================
+   🔹 ENCABEZADO PRINCIPAL
+=========================== */
 .rutinas-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
+    margin-bottom: 1.5rem;
 }
 
-.rutinas-grid {
+.titulo-rutinas {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.fecha {
+    color: #6b7280;
+    font-size: 0.95rem;
+    text-transform: capitalize;
+}
+
+/* ===========================
+   🔹 TABS DE DISCIPLINA
+=========================== */
+.tabs-disciplina {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.tabs-disciplina .tab {
+    background: #f3f4f6;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    color: #374151;
+}
+
+.tabs-disciplina .tab:hover {
+    background: #e0e7ff;
+}
+
+.tabs-disciplina .active {
+    background: #2563eb;
+    color: white;
+}
+
+/* ===========================
+   🔹 MÉTRICAS
+=========================== */
+.metricas {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1rem;
-    margin-top: 1rem;
+    margin-bottom: 1.5rem;
 }
 
-.rutina-card {
+.card-metrica {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     background: white;
     border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+.card-metrica:hover {
+    transform: translateY(-4px);
+}
+
+.card-metrica .icon {
+    font-size: 1.8rem;
+    color: #2563eb;
+}
+
+.card-metrica h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.card-metrica p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* ===========================
+   🔹 FILTROS DE ESTADO
+=========================== */
+.filtros-estado {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin: 1.5rem 0;
+}
+
+.filtros-estado button {
+    background: #f3f4f6;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #374151;
+    transition: all 0.2s ease;
+}
+
+.filtros-estado button:hover {
+    background: #e0e7ff;
+}
+
+.filtros-estado button.active {
+    background: #2563eb;
+    color: white;
+}
+
+.refresh-btn {
+    margin-left: auto;
+    background: #2563eb;
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+}
+
+.fa-spin {
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* ===========================
+   🔹 BUSCADOR
+=========================== */
+.search-bar {
+    position: relative;
+    max-width: 400px;
+    margin-bottom: 1.5rem;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.6rem 2.5rem 0.6rem 1rem;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-size: 0.95rem;
+}
+
+.search-bar .icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+/* ===========================
+   🔹 GRID DE RUTINAS
+=========================== */
+.rutinas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1.25rem;
+}
+
+/* Tarjeta base */
+.rutina-card {
+    background: white;
+    border-radius: 14px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     cursor: pointer;
     overflow: hidden;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .rutina-card:hover {
-    transform: scale(1.02);
+    transform: translateY(-5px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
 }
 
-.rutina-card.add-card {
+/* Header dentro de la tarjeta */
+.rutina-header {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.25rem;
-    font-weight: bold;
+    justify-content: flex-end;
+}
+
+.rutina-header .estado {
+    background: rgba(255,255,255,0.3);
+    color: #111827;
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+}
+
+/* Contenido */
+.rutina-body {
+    color: #1f2937;
+    margin-top: 0.5rem;
+}
+
+.rutina-body h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.rutina-body p {
+    font-size: 0.9rem;
+    margin: 0.2rem 0;
+}
+
+.nivel {
+    font-weight: 600;
     color: #2563eb;
-    background: #f3f4f6;
 }
 
-.rutina-img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
+/* Progreso */
+.progreso {
+    margin-top: 0.8rem;
 }
 
-.rutina-info {
-    padding: 1rem;
+.progreso .barra {
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
 }
 
-.modal-large {
-    width: 600px;
+.progreso .relleno {
+    height: 6px;
+    background: #2563eb;
+    border-radius: 3px;
+    transition: width 0.3s ease;
 }
 
-.close-btn {
-    background: transparent;
-    border: none;
-    font-size: 1.25rem;
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    cursor: pointer;
+.progreso small {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
+    color: #6b7280;
 }
 
-.ejercicio-item {
+/* Botones inferiores */
+.acciones {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    margin-top: 0.8rem;
 }
 
-.ejercicio-actions button {
-    margin-left: 0.5rem;
-    background: none;
+.btn-registrar, .btn-detalles {
     border: none;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.btn-danger {
-    background: #dc2626;
+.btn-registrar {
+    background: #16a34a;
     color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
 }
 
-.btn-secondary {
-    background: #e5e7eb;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+.btn-detalles {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-registrar:hover {
+    background: #15803d;
+}
+
+.btn-detalles:hover {
+    background: #1e40af;
+}
+
+/* ===========================
+   🔹 TARJETA “CREAR NUEVA”
+=========================== */
+.rutina-card.add-card {
+    background: #f3f4f6;
+    border: 2px dashed #9ca3af;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.rutina-card.add-card .plus {
+    font-size: 2rem;
+    color: #2563eb;
+    margin-bottom: 0.5rem;
+}
+
+.rutina-card.add-card p {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+}
+
+.rutina-card.add-card small {
+    color: #6b7280;
+}
+
+/* ===========================
+   🔹 RESPONSIVE
+=========================== */
+@media (max-width: 768px) {
+    .rutinas-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .metricas {
+        grid-template-columns: 1fr 1fr;
+    }
+    .search-bar {
+        max-width: 100%;
+    }
 }
