@@ -335,3 +335,154 @@
         max-width: 100%;
     }
 }
+
+.tabs-disciplina {
+    justify-content: flex-start;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+}
+
+.tabs-disciplina .tab {
+    background: none;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+}
+
+.tabs-disciplina .tab.active {
+    border-color: #2563eb;
+    color: #2563eb;
+    background: none;
+}
+
+/* 🔵 Catálogo - estilo limpio */
+.catalogo-card {
+    border-top: 5px solid #2563eb;
+    background: #f9fafb;
+    transition: all 0.2s ease;
+}
+.catalogo-card:hover {
+    background: #eef2ff;
+    transform: translateY(-3px);
+}
+.catalogo-card .btn-primary {
+    background: #2563eb;
+    color: white;
+}
+.catalogo-card .btn-outline {
+    border: 1px solid #2563eb;
+    color: #2563eb;
+    background: transparent;
+}
+
+/* 🟢 Asignadas - estilo activo / dinámico */
+.asignada-card {
+    position: relative;
+    background: linear-gradient(145deg, #d1fae5, #a7f3d0);
+    border-top: 5px solid #16a34a;
+    color: #065f46;
+    overflow: hidden;
+    transition: transform 0.25s ease;
+}
+.asignada-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Estado visual */
+.estado-badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.estado-badge.activa { background: #22c55e; color: white; }
+.estado-badge.pendiente { background: #facc15; color: #78350f; }
+.estado-badge.completada { background: #3b82f6; color: white; }
+.estado-badge.atrasada { background: #ef4444; color: white; }
+
+/* Progreso circular */
+.progreso-circular {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.circular-chart {
+    width: 60px;
+    height: 60px;
+    transform: rotate(-90deg);
+}
+.circle-bg {
+    fill: none;
+    stroke: #e5e7eb;
+    stroke-width: 3.8;
+}
+.circle {
+    fill: none;
+    stroke: #16a34a;
+    stroke-width: 3.8;
+    stroke-linecap: round;
+    animation: progress 1s ease-out forwards;
+}
+@keyframes progress {
+    0% { stroke-dasharray: 0 100; }
+}
+.progreso-text {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #065f46;
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    max-width: 650px;
+    width: 90%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    animation: slideIn 0.25s ease;
+}
+
+.close-btn {
+    border: none;
+    background: transparent;
+    font-size: 1.4rem;
+    cursor: pointer;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    color: #555;
+    transition: color 0.2s ease;
+}
+.close-btn:hover {
+    color: #111;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+

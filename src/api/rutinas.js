@@ -2,28 +2,36 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
-export const getRutinas = async () => {
+// 🔹 Helper para incluir el token automáticamente
+const getAuthHeader = () => {
     const token = localStorage.getItem("token");
-    const response = await axios.get(`${API_URL}/rutinas`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    return {
+        headers: { Authorization: `Bearer ${token}` },
+    };
+};
+
+export const getRutinas = async () => {
+    const response = await axios.get(`${API_URL}/rutinas`, getAuthHeader());
     return response.data;
 };
 
 export const addRutina = async (rutinaData) => {
-    const token = localStorage.getItem("token");
-    const response = await axios.post(`${API_URL}/rutinas`, rutinaData, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await axios.post(`${API_URL}/rutinas`, rutinaData, getAuthHeader());
     return response.data;
 };
 
 export const getRutinaById = async (id) => {
-    const token = localStorage.getItem("token");
-    const response = await axios.get(`${API_URL}/rutinas/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await axios.get(`${API_URL}/rutinas/${id}`, getAuthHeader());
     return response.data;
 };
 
+// ✅ Corregido: ahora usa el header correctamente
+export const getRutinasPorAlumno = async (alumnoId) => {
+    const response = await axios.get(`${API_URL}/asignacion/alumno/${alumnoId}`, getAuthHeader());
+    return response.data;
+};
 
+export const getRutinasAsignadas = async () => {
+    const response = await axios.get(`${API_URL}/rutinas/alumno/mis-rutinas`, getAuthHeader());
+    return response.data;
+};

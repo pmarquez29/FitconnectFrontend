@@ -13,6 +13,7 @@ import AlumnoPerfilModal from "../components/AlumnoPerfilModal";
 import AssignRutinaModal from "../components/AssignRutinaModal";
 import DeleteConfirmationModal from "../components/EliminarAlumnoModal";
 
+
 // API
 import { getAlumnos, toggleAlumnoStatus } from "../api/alumnos";
 
@@ -66,7 +67,7 @@ const AlumnosPage = () => {
             setError("");
 
             const data = await getAlumnos();
-            setAlumnos(data);
+            setAlumnos(data.map(normalizarAlumno));
         } catch (err) {
             console.error("Error loading alumnos:", err);
             setError(err.response?.data?.error || "Error al cargar alumnos");
@@ -78,14 +79,12 @@ const AlumnosPage = () => {
 
     const filterAlumnos = () => {
         let filtered = alumnos.filter((alumno) => {
-            const usuario = alumno.Usuario || alumno;
-            const disciplina = usuario.Disciplina?.nombre || alumno.disciplina;
-
-            const matchesSearch = `${usuario.nombre} ${usuario.apellido} ${usuario.email}`
+            const matchesSearch = `${alumno.nombre} ${alumno.apellido} ${alumno.email}`
                 .toLowerCase()
                 .includes(search.toLowerCase());
 
-            const matchesFilter = filter === "Todos" || disciplina === filter;
+            const matchesFilter = filter === "Todos" || alumno.disciplina === filter;
+
 
             return matchesSearch && matchesFilter;
         });
@@ -186,6 +185,48 @@ const AlumnosPage = () => {
         showToast("Alumno eliminado exitosamente");
         loadAlumnos(true);
     };
+
+    const normalizarAlumno = (a) => {
+        const u = a.Usuario || {};
+
+        return {
+            usuario_id: a.usuario_id,
+            id: a.usuario_id, // por compatibilidad
+
+            // Datos del usuario
+            nombre: u.nombre,
+            apellido: u.apellido,
+            email: u.email,
+            telefono: u.telefono,
+            genero: u.genero,
+            fecha_nacimiento: u.fecha_nacimiento,
+            activo: u.activo,
+            last_login: u.last_login || null,
+
+            // Disciplina
+            disciplina: u.Disciplina?.nombre || "Sin disciplina",
+
+            // Foto
+            foto: u.foto
+                ? `data:image/jpeg;base64,${Buffer.from(u.foto).toString("base64")}`
+                : null,
+
+            // Datos de alumno
+            peso: a.peso,
+            altura: a.altura,
+            objetivo: a.objetivo,
+            nivel_experiencia: a.nivel_experiencia,
+            progreso: a.progreso || 0,
+
+            // Extras
+            ultimo_acceso: u.fecha_registro,
+            rutina_asignada: a.AsignacionRutinas?.find(r => r.estado === "activa")?.Rutina?.nombre || "Sin asignar",
+
+            // Esto permite compatibilidad con tus handlers
+            Usuario: u
+        };
+    };
+
 
     if (loading) {
         return (

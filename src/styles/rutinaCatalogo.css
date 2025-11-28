@@ -1,0 +1,37 @@
+.rutina-card.catalogo-card {
+    border-top: 5px solid #2563eb;
+    background: #f9fafb;
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.rutina-card.catalogo-card:hover {
+    background: #eef2ff;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+}
+
+.rutina-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.rutina-card-header h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e3a8a;
+}
+
+.rutina-card-body {
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.rutina-card-body p {
+    margin: 0.3rem 0;
+}

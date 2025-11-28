@@ -1,13 +1,21 @@
-import { useState } from "react";
-import { Dropdown } from "react-bootstrap";
-import { FaEllipsisH, FaUser, FaEnvelope, FaDumbbell, FaClock, FaCode, FaEdit, FaTrash, FaEye, FaComments } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { Dropdown, Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { FaEllipsisH, FaUser, FaEnvelope, FaClock, FaComments, FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { MdFitnessCenter } from "react-icons/md";
 import "../styles/alumnos.css";
+import defaultAvatar from "../assets/avatar.jpg";
+import RutinaCard from "./RutinaCard";
+import {getRutinasPorAlumno} from "../api/rutinas.js"; // 👈 usar tu componente de rutinas
+import { Modal } from "react-bootstrap";
 
 const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, onChat }) => {
     const [imageError, setImageError] = useState(false);
+    const [showRutinasModal, setShowRutinasModal] = useState(false);
+    const [rutinas, setRutinas] = useState([]);
+    const [loadingRutinas, setLoadingRutinas] = useState(false);
+    const navigate = useNavigate();
 
-    // Función para obtener color de disciplina
     const getDisciplinaColor = (disciplina) => {
         const colors = {
             'GIMNASIO': '#4a90e2',
@@ -19,30 +27,24 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
         return colors[disciplina?.toUpperCase()] || '#6c757d';
     };
 
-    // Función para obtener color de progreso
     const getProgressColor = (progress) => {
-        if (progress >= 80) return '#28a745';
-        if (progress >= 60) return '#ffc107';
-        if (progress >= 40) return '#fd7e14';
-        return '#dc3545';
+        if (progress >= 80) return '#32d657';
+        if (progress >= 60) return '#f7b801';
+        if (progress >= 40) return '#f18701';
+        return '#ff6b6b';
     };
 
-    // Función para formatear fecha
     const formatDate = (dateString) => {
-        if (!dateString) return 'N/A';
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-ES', {
-                day: '2-digit',
-                month: '2-digit',
-                year: '2-digit'
-            });
-        } catch {
-            return dateString;
-        }
+        if (!dateString) return "Sin registro";
+        const fecha = new Date(dateString);
+        if (isNaN(fecha)) return "Sin registro";
+        return fecha.toLocaleDateString("es-ES", {
+            day: "2-digit",
+            month: "short",
+            year: "2-digit",
+        });
     };
 
-    // Función para truncar email
     const truncateEmail = (email, maxLength = 20) => {
         if (!email || email.length <= maxLength) return email;
         const [name, domain] = email.split('@');
@@ -54,9 +56,23 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
 
     const progress = alumno.progreso || 0;
 
+    const handleOpenRutinas = async () => {
+        setShowRutinasModal(true);
+        setLoadingRutinas(true);
+        try {
+            const data = await getRutinasPorAlumno(alumno.usuario_id || alumno.id);
+
+            setRutinas(data);
+        } catch (err) {
+            console.error("Error cargando rutinas del alumno:", err);
+        } finally {
+            setLoadingRutinas(false);
+        }
+    };
+
     return (
         <div className="alumno-card">
-            {/* Header con disciplina y opciones */}
+            {/* HEADER */}
             <div className="card-header">
                 <div
                     className="disciplina-badge"
@@ -69,6 +85,7 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                     <Dropdown.Toggle variant="light" className="options-btn">
                         <FaEllipsisH />
                     </Dropdown.Toggle>
+
                     <Dropdown.Menu align="end">
                         <Dropdown.Item onClick={() => onViewProfile?.(alumno)}>
                             <FaEye className="me-2" />
@@ -94,20 +111,20 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                 </Dropdown>
             </div>
 
-            {/* Avatar */}
+            {/* AVATAR */}
             <div className="avatar-container">
-                {!imageError && alumno.foto ? (
-                    <img
-                        src={alumno.foto}
-                        alt={`${alumno.nombre} ${alumno.apellido}`}
-                        className="alumno-foto"
-                        onError={() => setImageError(true)}
-                    />
-                ) : (
-                    <div className="avatar-placeholder">
-                        <FaUser size={32} />
-                    </div>
-                )}
+                <img
+                    src={
+                        !imageError && alumno.foto
+                            ? alumno.foto.startsWith("data:image") || alumno.foto.startsWith("http")
+                                ? alumno.foto
+                                : defaultAvatar
+                            : defaultAvatar
+                    }
+                    alt={`${alumno.nombre} ${alumno.apellido}`}
+                    className="alumno-foto"
+                    onError={() => setImageError(true)}
+                />
             </div>
 
             {/* Nombre */}
@@ -115,51 +132,47 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                 {alumno.nombre} {alumno.apellido}
             </h3>
 
-            {/* Información en grid */}
+            {/* GRID INFO */}
             <div className="info-grid">
                 <div className="info-item">
                     <div className="info-label">
                         <FaEnvelope size={12} />
-                        <span>Correo</span>
+                        Correo
                     </div>
-                    <div className="info-value" title={alumno.email}>
-                        {truncateEmail(alumno.email) || 'No disponible'}
-                    </div>
+                    <div className="info-value">{truncateEmail(alumno.email)}</div>
                 </div>
 
                 <div className="info-item">
                     <div className="info-label">
                         <MdFitnessCenter size={12} />
-                        <span>Rutina asignada</span>
+                        Rutina
                     </div>
                     <div className="info-value">
-                        {alumno.rutina_asignada || 'Secundary'}
+                        {alumno.rutina_asignada || "Ninguna"}
                     </div>
                 </div>
 
                 <div className="info-item">
                     <div className="info-label">
                         <FaClock size={12} />
-                        <span>Último acceso</span>
+                        Último acceso
                     </div>
                     <div className="info-value">
-                        {formatDate(alumno.ultimo_acceso) || '03/23 - 03/24'}
+                        {formatDate(alumno.ultimo_acceso || alumno.Usuario?.last_login)}
                     </div>
                 </div>
 
                 <div className="info-item">
-                    <div className="info-label">
-                        <span>Estado</span>
-                    </div>
+                    <div className="info-label">Estado</div>
                     <div className="info-value">
-                        <span className={`estado-badge ${alumno.activo ? 'activo' : 'inactivo'}`}>
-                            {alumno.activo !== false ? 'Activo' : 'Inactivo'}
+                        <span className={`estado-badge ${alumno.activo ? "activo" : "inactivo"}`}>
+                            {alumno.activo ? "Activo" : "Inactivo"}
                         </span>
                     </div>
                 </div>
             </div>
 
-            {/* Barra de progreso */}
+            {/* PROGRESO */}
             <div className="progreso-container">
                 <div className="progreso-header">
                     <span className="progreso-label">Progreso</span>
@@ -176,39 +189,46 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                 </div>
             </div>
 
-            {/* Botones de acción */}
+            {/* ACCIONES */}
             <div className="acciones">
-                <button
-                    className="accion-btn primary"
-                    onClick={() => onViewProfile?.(alumno)}
-                    title="Ver perfil"
-                >
+                <button className="accion-btn" onClick={() => navigate(`/alumnos/${alumno.usuario_id || alumno.id}`)}>
                     <FaUser size={14} />
-                    <span>Perfil</span>
+                    Perfil
                 </button>
-                <button
-                    className="accion-btn success"
-                    onClick={() => onAssignRoutine?.(alumno)}
-                    title="Asignar rutina"
-                >
+
+                <button className="accion-btn" onClick={handleOpenRutinas}>
                     <MdFitnessCenter size={14} />
-                    <span>Rutinas</span>
+                    Rutinas
                 </button>
-                <button
-                    className="accion-btn info"
-                    onClick={() => onChat?.(alumno)}
-                    title="Iniciar chat"
-                >
+
+                <button className="accion-btn" onClick={() => navigate(`/mensajes?chat=${alumno.usuario_id || alumno.id}`)}>
                     <FaComments size={14} />
-                    <span>Stats</span>
+                    Stats
                 </button>
             </div>
 
-            {/* Código del alumno */}
-            <div className="codigo-container">
-                <FaCode size={12} className="me-1" />
-                <span>Código: <strong>{alumno.codigo_acceso || alumno.id || '123'}</strong></span>
-            </div>
+            {/* MODAL DE RUTINAS */}
+            <Modal show={showRutinasModal} onHide={() => setShowRutinasModal(false)} size="lg" centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Rutinas de {alumno.nombre}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {loadingRutinas ? (
+                        <div className="text-center p-3">
+                            <Spinner animation="border" />
+                            <p>Cargando rutinas...</p>
+                        </div>
+                    ) : rutinas.length > 0 ? (
+                        <div className="rutinas-list">
+                            {rutinas.map((r) => (
+                                <RutinaCard key={r.id} rutina={r} onClick={() => console.log("Abrir detalle", r.id)} />
+                            ))}
+                        </div>
+                    ) : (
+                        <p>No tiene rutinas asignadas aún.</p>
+                    )}
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };

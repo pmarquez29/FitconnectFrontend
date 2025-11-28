@@ -1,59 +1,118 @@
-import { useEffect, useState } from "react";
-import { getRutinas } from "../api/rutinas";
+import { useEffect, useState, useRef } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import RutinaCard from "../components/RutinaCard";
 import AddRutinaModal from "../components/AddRutinaModal";
-import RutinaDetailModal from "../components/RutinaDetailModal";
-import { FaChartPie, FaTasks, FaClock, FaUsers, FaSync } from "react-icons/fa";
+import RutinaCardCatalogo from "../components/RutinaCardCatalogo";
+import RutinaCardAsignada from "../components/RutinaCardAsignada";
+import RutinaAsignadaDetailModal from "../components/RutinaAsignadaDetailModal";
+import { getRutinas } from "../api/rutinas";
+import axios from "axios";
 import "../styles/layout.css";
 import "../styles/rutinas.css";
+import {Spinner} from "react-bootstrap";
+import RutinaCatalogoDetailModal from "../components/RutinaCatalogoDetailModal.jsx";
+import RutinaEditModal from "../components/RutinaEditModal.jsx";
+
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+
 
 const RutinasPage = () => {
-    const [rutinas, setRutinas] = useState([]);
+    const [activeTab, setActiveTab] = useState("catalogo");
+    const [rutinasCatalogo, setRutinasCatalogo] = useState([]);
+    const [rutinasAsignadas, setRutinasAsignadas] = useState([]);
     const [search, setSearch] = useState("");
-    const [selectedRutina, setSelectedRutina] = useState(null);
+    const [selectedRutinaAsignada, setSelectedRutinaAsignada] = useState(null);
+    const [selectedRutinaCatalogo, setSelectedRutinaCatalogo] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
-    const [filterEstado, setFilterEstado] = useState("Todos");
     const [filterDisciplina, setFilterDisciplina] = useState("Todos");
-    const [refreshing, setRefreshing] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [rutinaParaEditar, setRutinaParaEditar] = useState(null);
 
-    useEffect(() => {
-        loadRutinas();
-    }, []);
+    const token = localStorage.getItem("token");
 
-    const loadRutinas = async () => {
+    const loadedCatalogo = useRef(false);
+    const loadedAsignadas = useRef(false);
+
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+    // 🔹 Catálogo (solo instructor)
+    const fetchRutinasCatalogo = async () => {
         try {
-            setRefreshing(true);
+            setLoading(true);
             const data = await getRutinas();
-            setRutinas(data);
+            setRutinasCatalogo(Array.isArray(data) ? [...data] : []);
         } catch (err) {
-            console.error("Error cargando rutinas:", err);
+            console.error("Error obteniendo catálogo:", err);
+            setRutinasCatalogo([]);
         } finally {
-            setRefreshing(false);
+            setLoading(false);
         }
     };
 
-    // Estadísticas
-    const total = rutinas.length;
-    const completadas = rutinas.filter((r) => r.estado === "completada").length;
-    const pendientes = rutinas.filter((r) => r.estado === "pendiente").length;
-    const activas = rutinas.filter((r) => r.estado === "activa").length;
-    const atrasadas = rutinas.filter((r) => r.estado === "atrasada").length;
-    const alumnosActivos = total ? Math.round((activas / total) * 100) : 0;
+    // 🔹 Rutinas Asignadas (solo instructor)
+    const fetchRutinasAsignadas = async () => {
+        try {
+            setRutinasAsignadas([]);
+            const { data } = await axios.get(`${API_URL}/asignacion/instructor`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setRutinasAsignadas(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.error("Error obteniendo rutinas asignadas:", err);
+            setRutinasAsignadas([]);
+        }
+    };
 
-    // Filtros combinados
-    const filteredRutinas = rutinas.filter((r) => {
-        const matchesSearch = r.nombre.toLowerCase().includes(search.toLowerCase());
-        const matchesEstado = filterEstado === "Todos" || r.estado === filterEstado;
-        const matchesDisciplina = filterDisciplina === "Todos" || r.Disciplina?.nombre === filterDisciplina;
-        return matchesSearch && matchesEstado && matchesDisciplina;
-    });
+    useEffect(() => {
+        if (activeTab === "catalogo" && !loadedCatalogo.current) {
+            fetchRutinasCatalogo();
+            loadedCatalogo.current = true;
+        } else if (activeTab === "asignadas" && !loadedAsignadas.current) {
+            fetchRutinasAsignadas();
+            loadedAsignadas.current = true;
+        }
+    }, [activeTab]);
 
-    const disciplinas = [
-        "Todos",
-        ...new Set(rutinas.map((r) => r.Disciplina?.nombre).filter(Boolean)),
-    ];
+    const rutinasFiltradas =
+        activeTab === "catalogo"
+            ? rutinasCatalogo.filter(
+                (r) =>
+                    r.nombre.toLowerCase().includes(search.toLowerCase()) &&
+                    (filterDisciplina === "Todos" ||
+                        r.Disciplina?.nombre === filterDisciplina)
+            )
+            : rutinasAsignadas.filter((r) =>
+                (r.nombre || "").toLowerCase().includes(search.toLowerCase())
+            );
+
+    const getRutinaKey = (r, tipo) => {
+        const id = r.id || r.rutina_id || Math.random();
+        return `${tipo}-${id}`;
+    };
+
+    if (loading) {
+        return (
+            <div className="layout">
+                <Sidebar
+                    open={sidebarOpen}
+                    setOpen={setSidebarOpen}
+                    collapsed={sidebarCollapsed}
+                    setCollapsed={setSidebarCollapsed}
+                />
+                <main className="content">
+                    <Header user={JSON.parse(localStorage.getItem("user") || "{}")} />
+                    <div className="d-flex justify-content-center align-items-center" style={{ height: "60vh" }}>
+                        <div className="text-center">
+                            <Spinner animation="border" size="lg" className="mb-3" />
+                            <div>Cargando Rutinas...</div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        );
+    }
 
     return (
         <div className="layout">
@@ -61,130 +120,92 @@ const RutinasPage = () => {
             <main className="content">
                 <Header user={JSON.parse(localStorage.getItem("user"))} />
 
-                {/* Título y Fecha */}
-                <div className="rutinas-header">
-                    <h1 className="titulo-rutinas">Gestión de Rutinas</h1>
-                    <p className="fecha">
-                        {new Date().toLocaleDateString("es-ES", {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                        })}
-                    </p>
-                </div>
-
-                {/* Tabs de disciplina */}
-                <div className="tabs-disciplina">
-                    {disciplinas.map((d) => (
-                        <button
-                            key={d}
-                            className={filterDisciplina === d ? "tab active" : "tab"}
-                            onClick={() => setFilterDisciplina(d)}
-                        >
-                            {d}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Métricas */}
-                <div className="metricas">
-                    <div className="card-metrica">
-                        <FaTasks className="icon" />
-                        <div>
-                            <h3>{activas}</h3>
-                            <p>Rutinas Activas</p>
-                        </div>
-                    </div>
-                    <div className="card-metrica">
-                        <FaChartPie className="icon" />
-                        <div>
-                            <h3>{completadas}</h3>
-                            <p>Completadas</p>
-                        </div>
-                    </div>
-                    <div className="card-metrica">
-                        <FaClock className="icon" />
-                        <div>
-                            <h3>{pendientes}</h3>
-                            <p>Pendientes</p>
-                        </div>
-                    </div>
-                    <div className="card-metrica">
-                        <FaUsers className="icon" />
-                        <div>
-                            <h3>{alumnosActivos}%</h3>
-                            <p>Alumnos Activos</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Filtros de estado */}
-                <div className="filtros-estado">
-                    {[
-                        ["Todos", total],
-                        ["activa", activas],
-                        ["pendiente", pendientes],
-                        ["atrasada", atrasadas],
-                        ["completada", completadas],
-                    ].map(([estado, count]) => (
-                        <button
-                            key={estado}
-                            className={filterEstado === estado ? "active" : ""}
-                            onClick={() => setFilterEstado(estado)}
-                        >
-                            {estado.charAt(0).toUpperCase() + estado.slice(1)} ({count})
-                        </button>
-                    ))}
-
+                {/* Tabs */}
+                <div className="tabs-disciplina" style={{ marginBottom: "1rem" }}>
                     <button
-                        className="refresh-btn"
-                        onClick={loadRutinas}
-                        disabled={refreshing}
+                        className={activeTab === "asignadas" ? "tab active" : "tab"}
+                        onClick={() => setActiveTab("asignadas")}
                     >
-                        <FaSync className={refreshing ? "fa-spin" : ""} />
+                        Rutinas Asignadas
+                    </button>
+                    <button
+                        className={activeTab === "catalogo" ? "tab active" : "tab"}
+                        onClick={() => setActiveTab("catalogo")}
+                    >
+                        Catálogo del Instructor
                     </button>
                 </div>
 
-                {/* Buscador */}
-                <div className="search-bar">
-                    <input
-                        type="text"
-                        placeholder="Buscar rutina..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <span className="icon">🔍</span>
-                </div>
-
-                {/* Grid de rutinas */}
+                {/* Grid */}
                 <div className="rutinas-grid">
-                    <div className="rutina-card add-card" onClick={() => setShowAddModal(true)}>
-                        <span className="plus">＋</span>
-                        <p>Crear Nueva Rutina</p>
-                        <small>Diseña un plan personalizado</small>
-                    </div>
+                    {rutinasFiltradas.length === 0 ? (
+                        <p style={{ color: "#6b7280", fontStyle: "italic" }}>
+                            {loading ? "Cargando rutinas..." : "No hay rutinas para mostrar."}
+                        </p>
+                    ) : activeTab === "catalogo" ? (
+                        rutinasFiltradas.map((rutina) => (
+                            <RutinaCardCatalogo
+                                key={getRutinaKey(rutina, "catalogo")}
+                                rutina={rutina}
+                                onSelect={(id, action) => {
+                                    if (action === "editar") {
+                                        // abrir modal de edición (lo crearás después)
+                                        console.log("Editar rutina:", id);
+                                    } else {
+                                        // abrir modal de detalles
+                                        setSelectedRutinaCatalogo(id);
+                                    }
+                                }}
+                            />
 
-                    {filteredRutinas.map((rutina) => (
-                        <RutinaCard
-                            key={rutina.id}
-                            rutina={rutina}
-                            onClick={setSelectedRutina}
-                        />
-                    ))}
+                        ))
+                    ) : (
+                        rutinasFiltradas.map((rutina) => (
+                            <RutinaCardAsignada
+                                key={`asignada-${rutina.id}`}
+                                rutina={rutina}
+                                onSelect={(id) => {
+                                    console.log("Abriendo modal con asignación:", id);
+                                    setSelectedRutinaAsignada(id);
+                                }}
+                            />
+                        ))
+                    )}
                 </div>
 
+                {/* Modales */}
                 <AddRutinaModal
                     isOpen={showAddModal}
                     onClose={() => setShowAddModal(false)}
-                    onRutinaAdded={loadRutinas}
-                />
-
-                <RutinaDetailModal
-                    rutinaId={selectedRutina}
-                    onClose={() => setSelectedRutina(null)}
+                    onRutinaAdded={fetchRutinasCatalogo}
                 />
             </main>
+
+            <RutinaAsignadaDetailModal
+                show={!!selectedRutinaAsignada}
+                onHide={() => setSelectedRutinaAsignada(null)}
+                asignacionId={selectedRutinaAsignada}
+            />
+            <RutinaCatalogoDetailModal
+                show={!!selectedRutinaCatalogo}
+                onHide={() => setSelectedRutinaCatalogo(null)}
+                rutinaId={selectedRutinaCatalogo}
+                onEditar={(rutina) => {
+                    setRutinaParaEditar(rutina);
+                    setSelectedRutinaCatalogo(null);
+                }}
+            />
+
+            <RutinaEditModal
+                show={!!rutinaParaEditar}
+                rutina={rutinaParaEditar}
+                onHide={() => setRutinaParaEditar(null)}
+                onSave={fetchRutinasCatalogo}
+            />
+
+
+
+
         </div>
     );
 };

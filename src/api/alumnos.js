@@ -8,6 +8,8 @@ const getAuthHeader = () => ({
 
 // Obtener todos los alumnos del instructor
 export const getAlumnos = async () => {
+
+
     try {
         const response = await axios.get(`${API_URL}/alumnos`, getAuthHeader());
         return response.data;
@@ -119,7 +121,7 @@ export const getAlumnoComparativoRutinas = async (id) => {
 // Asignar rutina a alumno
 export const assignRutinaToAlumno = async (alumnoId, rutinaId, fechaInicio, notas = '') => {
     try {
-        const response = await axios.post(`${API_URL}/asignaciones`, {
+        const response = await axios.post(`${API_URL}/asignacion`, {
             rutina_id: rutinaId,
             alumno_id: alumnoId,
             fecha_inicio: fechaInicio,
@@ -178,3 +180,9 @@ export const getDisciplinas = async () => {
         throw error;
     }
 };
+
+export const getAlumnoDetalles = async (id) => {
+    const response = await axios.get(`${API_URL}/alumnos/${id}/detalles`, getAuthHeader());
+    return response.data;
+};
+
