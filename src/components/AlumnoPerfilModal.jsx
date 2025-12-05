@@ -138,7 +138,6 @@ const AlumnoPerfilModal = ({ show, onHide, alumnoId }) => {
                     <Card className="shadow-sm border-0">
                         <Card.Body>
                             <div className="d-flex align-items-center mb-2">
-                                <FaTarget className="text-primary me-2" size={20} />
                                 <h6 className="mb-0">Objetivo</h6>
                             </div>
                             <p className="mb-0 text-muted">{alumno.objetivo}</p>

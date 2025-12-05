@@ -4,16 +4,6 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
-/**
- * Modal para crear un nuevo ejercicio asociado a una rutina.
- *
- * Props:
- *  - show: bool → controla visibilidad
- *  - onHide: fn → cierra modal
- *  - onCreated: fn → callback al crear
- *  - rutinaId: number → id de la rutina actual
- *  - disciplinaNombre: string (opcional) → alternativa si no hay rutina
- */
 const AddEjercicioModal = ({ show, onHide, onCreated, rutinaId, disciplinaNombre }) => {
     const [form, setForm] = useState({
         nombre: "",

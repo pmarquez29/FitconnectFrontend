@@ -14,3 +14,8 @@ export const createManualProgress = async (data) => {
     const res = await axios.post(`${API_URL}/progreso/manual`, data, getAuthHeader());
     return res.data;
 };
+
+export const cambiarEstadoRutina = async (id, nuevo_estado) => {
+    const res = await axios.patch(`${API_URL}/asignacion/${id}/estado`, { nuevo_estado }, getAuthHeader());
+    return res.data;
+};

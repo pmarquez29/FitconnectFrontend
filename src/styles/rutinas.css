@@ -1,6 +1,6 @@
-/* ===========================
-   🔹 ENCABEZADO PRINCIPAL
-=========================== */
+/* ========================================
+   🏋️‍♀️ RUTINAS - SECCIÓN PRINCIPAL
+======================================== */
 .rutinas-header {
     display: flex;
     justify-content: space-between;
@@ -20,39 +20,42 @@
     text-transform: capitalize;
 }
 
-/* ===========================
-   🔹 TABS DE DISCIPLINA
-=========================== */
+/* ========================================
+   🟦 TABS DISCIPLINA
+======================================== */
 .tabs-disciplina {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.5rem;
 }
 
 .tabs-disciplina .tab {
-    background: #f3f4f6;
+    background: none;
     border: none;
     padding: 0.5rem 1.25rem;
-    border-radius: 20px;
     cursor: pointer;
     font-size: 0.9rem;
-    transition: all 0.2s ease;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
     color: #374151;
 }
 
 .tabs-disciplina .tab:hover {
-    background: #e0e7ff;
+    background: #f3f4f6;
 }
 
-.tabs-disciplina .active {
-    background: #2563eb;
-    color: white;
+.tabs-disciplina .tab.active {
+    border-color: #2563eb;
+    color: #2563eb;
 }
 
-/* ===========================
-   🔹 MÉTRICAS
-=========================== */
+/* ========================================
+   📊 MÉTRICAS
+======================================== */
 .metricas {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -68,7 +71,7 @@
     border-radius: 12px;
     padding: 1rem 1.25rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s;
 }
 
 .card-metrica:hover {
@@ -80,78 +83,16 @@
     color: #2563eb;
 }
 
-.card-metrica h3 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.card-metrica p {
-    margin: 0;
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
-/* ===========================
-   🔹 FILTROS DE ESTADO
-=========================== */
-.filtros-estado {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
-    margin: 1.5rem 0;
-}
-
-.filtros-estado button {
-    background: #f3f4f6;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: #374151;
-    transition: all 0.2s ease;
-}
-
-.filtros-estado button:hover {
-    background: #e0e7ff;
-}
-
-.filtros-estado button.active {
-    background: #2563eb;
-    color: white;
-}
-
-.refresh-btn {
-    margin-left: auto;
-    background: #2563eb;
-    color: white;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-}
-
-.fa-spin {
-    animation: spin 1s linear infinite;
-}
-@keyframes spin {
-    100% { transform: rotate(360deg); }
-}
-
-/* ===========================
-   🔹 BUSCADOR
-=========================== */
-.search-bar {
+/* ========================================
+   🔍 BUSCADOR
+======================================== */
+.rutinas-search {
     position: relative;
     max-width: 400px;
     margin-bottom: 1.5rem;
 }
 
-.search-bar input {
+.rutinas-search input {
     width: 100%;
     padding: 0.6rem 2.5rem 0.6rem 1rem;
     border-radius: 12px;
@@ -159,7 +100,7 @@
     font-size: 0.95rem;
 }
 
-.search-bar .icon {
+.rutinas-search .icon {
     position: absolute;
     right: 1rem;
     top: 50%;
@@ -167,27 +108,25 @@
     color: #9ca3af;
 }
 
-/* ===========================
-   🔹 GRID DE RUTINAS
-=========================== */
+/* ========================================
+   🧱 GRID DE RUTINAS
+======================================== */
 .rutinas-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
     gap: 1.25rem;
 }
 
-/* Tarjeta base */
+/* Tarjeta de rutina */
 .rutina-card {
     background: white;
     border-radius: 14px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    cursor: pointer;
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .rutina-card:hover {
@@ -195,36 +134,10 @@
     box-shadow: 0 4px 14px rgba(0,0,0,0.1);
 }
 
-/* Header dentro de la tarjeta */
-.rutina-header {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.rutina-header .estado {
-    background: rgba(255,255,255,0.3);
-    color: #111827;
-    font-weight: 600;
-    font-size: 0.75rem;
-    padding: 0.2rem 0.6rem;
-    border-radius: 6px;
-}
-
-/* Contenido */
-.rutina-body {
-    color: #1f2937;
-    margin-top: 0.5rem;
-}
-
 .rutina-body h3 {
     font-size: 1.2rem;
     font-weight: 700;
     margin-bottom: 0.25rem;
-}
-
-.rutina-body p {
-    font-size: 0.9rem;
-    margin: 0.2rem 0;
 }
 
 .nivel {
@@ -241,248 +154,53 @@
     height: 6px;
     background: #e5e7eb;
     border-radius: 3px;
-    overflow: hidden;
 }
 
 .progreso .relleno {
     height: 6px;
     background: #2563eb;
     border-radius: 3px;
-    transition: width 0.3s ease;
+    transition: width 0.3s;
 }
 
-.progreso small {
-    display: block;
-    margin-top: 0.3rem;
-    font-size: 0.75rem;
-    color: #6b7280;
-}
-
-/* Botones inferiores */
+/* Botones */
 .acciones {
     display: flex;
     justify-content: space-between;
     margin-top: 0.8rem;
 }
 
-.btn-registrar, .btn-detalles {
+.btn-registrar,
+.btn-detalles {
     border: none;
     padding: 0.4rem 0.75rem;
     border-radius: 8px;
     font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background 0.2s;
+    color: #fff;
 }
 
-.btn-registrar {
-    background: #16a34a;
-    color: white;
-}
+.btn-registrar { background: #16a34a; }
+.btn-detalles { background: #2563eb; }
 
-.btn-detalles {
-    background: #2563eb;
-    color: white;
-}
+.btn-registrar:hover { background: #15803d; }
+.btn-detalles:hover { background: #1e40af; }
 
-.btn-registrar:hover {
-    background: #15803d;
-}
-
-.btn-detalles:hover {
-    background: #1e40af;
-}
-
-/* ===========================
-   🔹 TARJETA “CREAR NUEVA”
-=========================== */
-.rutina-card.add-card {
-    background: #f3f4f6;
-    border: 2px dashed #9ca3af;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1rem;
-}
-
-.rutina-card.add-card .plus {
-    font-size: 2rem;
-    color: #2563eb;
-    margin-bottom: 0.5rem;
-}
-
-.rutina-card.add-card p {
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 0.25rem;
-}
-
-.rutina-card.add-card small {
-    color: #6b7280;
-}
-
-/* ===========================
-   🔹 RESPONSIVE
-=========================== */
+/* ========================================
+   🪄 RESPONSIVE
+======================================== */
 @media (max-width: 768px) {
     .rutinas-header {
         flex-direction: column;
         align-items: flex-start;
     }
+
     .metricas {
         grid-template-columns: 1fr 1fr;
     }
-    .search-bar {
+
+    .rutinas-search {
         max-width: 100%;
     }
 }
-
-.tabs-disciplina {
-    justify-content: flex-start;
-    border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 0.5rem;
-}
-
-.tabs-disciplina .tab {
-    background: none;
-    font-weight: 600;
-    border-bottom: 3px solid transparent;
-    border-radius: 0;
-}
-
-.tabs-disciplina .tab.active {
-    border-color: #2563eb;
-    color: #2563eb;
-    background: none;
-}
-
-/* 🔵 Catálogo - estilo limpio */
-.catalogo-card {
-    border-top: 5px solid #2563eb;
-    background: #f9fafb;
-    transition: all 0.2s ease;
-}
-.catalogo-card:hover {
-    background: #eef2ff;
-    transform: translateY(-3px);
-}
-.catalogo-card .btn-primary {
-    background: #2563eb;
-    color: white;
-}
-.catalogo-card .btn-outline {
-    border: 1px solid #2563eb;
-    color: #2563eb;
-    background: transparent;
-}
-
-/* 🟢 Asignadas - estilo activo / dinámico */
-.asignada-card {
-    position: relative;
-    background: linear-gradient(145deg, #d1fae5, #a7f3d0);
-    border-top: 5px solid #16a34a;
-    color: #065f46;
-    overflow: hidden;
-    transition: transform 0.25s ease;
-}
-.asignada-card:hover {
-    transform: translateY(-4px);
-}
-
-/* Estado visual */
-.estado-badge {
-    padding: 0.2rem 0.6rem;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-.estado-badge.activa { background: #22c55e; color: white; }
-.estado-badge.pendiente { background: #facc15; color: #78350f; }
-.estado-badge.completada { background: #3b82f6; color: white; }
-.estado-badge.atrasada { background: #ef4444; color: white; }
-
-/* Progreso circular */
-.progreso-circular {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-.circular-chart {
-    width: 60px;
-    height: 60px;
-    transform: rotate(-90deg);
-}
-.circle-bg {
-    fill: none;
-    stroke: #e5e7eb;
-    stroke-width: 3.8;
-}
-.circle {
-    fill: none;
-    stroke: #16a34a;
-    stroke-width: 3.8;
-    stroke-linecap: round;
-    animation: progress 1s ease-out forwards;
-}
-@keyframes progress {
-    0% { stroke-dasharray: 0 100; }
-}
-.progreso-text {
-    position: absolute;
-    top: 22px;
-    right: 22px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #065f46;
-}
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    animation: fadeIn 0.2s ease;
-}
-
-.modal {
-    background: #fff;
-    border-radius: 12px;
-    padding: 1.5rem 2rem;
-    max-width: 650px;
-    width: 90%;
-    max-height: 85vh;
-    overflow-y: auto;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    animation: slideIn 0.25s ease;
-}
-
-.close-btn {
-    border: none;
-    background: transparent;
-    font-size: 1.4rem;
-    cursor: pointer;
-    position: absolute;
-    top: 1rem;
-    right: 1.5rem;
-    color: #555;
-    transition: color 0.2s ease;
-}
-.close-btn:hover {
-    color: #111;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideIn {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-

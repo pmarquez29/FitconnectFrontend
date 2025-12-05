@@ -10,14 +10,11 @@ const Header = ({ onToggleSidebar }) => {
 
     // 🔹 Cerrar menús al hacer clic fuera
     useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (menuRef.current && !menuRef.current.contains(e.target)) {
-                setShowUserMenu(false);
-                setShowNotifications(false);
-            }
+        const handleProfileUpdate = (e) => {
+            if (e.detail) setUser(e.detail);
         };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+        window.addEventListener("profileUpdated", handleProfileUpdate);
+        return () => window.removeEventListener("profileUpdated", handleProfileUpdate);
     }, []);
 
     // 🔹 Escucha actualizaciones del perfil global

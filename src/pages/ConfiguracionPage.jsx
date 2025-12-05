@@ -1,16 +1,23 @@
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import ConfigPerfil from "../components/ConfigPerfil";
-import ConfigCuenta from "../components/ConfigCuenta";
 import "../styles/layout.css";
 import "../styles/configuracion.css";
+import {useState} from "react";
 
 const ConfiguracionPage = () => {
     const user = JSON.parse(localStorage.getItem("user"));
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     return (
         <div className="layout">
-            <Sidebar />
+            <Sidebar
+                open={sidebarOpen}
+                setOpen={setSidebarOpen}
+                collapsed={sidebarCollapsed}
+                setCollapsed={setSidebarCollapsed}
+            />
             <main className="content configuracion-container">
                 <Header user={user} />
 
@@ -21,7 +28,6 @@ const ConfiguracionPage = () => {
 
                 <div className="config-grid">
                     <ConfigPerfil />
-                    <ConfigCuenta />
                 </div>
             </main>
         </div>

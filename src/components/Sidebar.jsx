@@ -2,65 +2,67 @@ import { NavLink } from "react-router-dom";
 import {
     MdDashboard,
     MdGroup,
-    MdFitnessCenter,
-    MdBarChart,
     MdMessage,
     MdSettings,
-    MdSports,
     MdLogout,
     MdMenuOpen,
-    MdMenu
+    MdMenu,
 } from "react-icons/md";
 import { IoStatsChart } from "react-icons/io5";
 import { GiMuscleUp, GiWeightLiftingUp } from "react-icons/gi";
 import logo from "../assets/logo.png";
-import "../styles/layout.css";
+import "../styles/sidebar.css";
 
-const Sidebar = ({ open, setOpen, collapsed, setCollapsed }) => {
-
+const Sidebar = ({
+                     open,
+                     setOpen,
+                     collapsed,
+                     setCollapsed,
+                     unreadMessages = 0,
+                 }) => {
     const links = [
         { to: "/dashboard", label: "Dashboard", icon: MdDashboard },
         { to: "/alumnos", label: "Mis Alumnos", icon: MdGroup },
         { to: "/rutinas", label: "Rutinas", icon: GiWeightLiftingUp },
         { to: "/estadisticas", label: "Estadísticas", icon: IoStatsChart },
-        { to: "/mensajes", label: "Mensajes", icon: MdMessage, badge: 5 },
+        {
+            to: "/mensajes",
+            label: "Mensajes",
+            icon: MdMessage,
+            badge: unreadMessages,
+        },
         { to: "/configuracion", label: "Configuración", icon: MdSettings },
     ];
 
     const handleLinkClick = () => {
-        // En móvil, cerrar sidebar al hacer click
-        if (window.innerWidth < 1024) {
-            setOpen(false);
-        }
-        // En desktop, si está colapsado, expandir al hacer click en cualquier link
-        else if (collapsed) {
-            setCollapsed(false);
-        }
+        if (window.innerWidth < 1024) setOpen(false);
+        else if (collapsed) setCollapsed(false);
     };
 
     return (
         <>
-            {/* Overlay para cerrar sidebar en mobile */}
             {open && window.innerWidth < 1024 && (
                 <div className="sidebar-overlay" onClick={() => setOpen(false)}></div>
             )}
 
-            <aside className={`sidebar ${open ? "open" : ""} ${collapsed ? "collapsed" : ""}`}>
-                <div className="logo">
-                    <img src={logo} alt="FitConnect Logo" />
+            <aside
+                className={`sidebar ${open ? "open" : ""} ${collapsed ? "collapsed" : ""}`}
+            >
+                {/* HEADER */}
+                <div className="sidebar-header">
+                    <img src={logo} alt="FitConnect Logo" className="sidebar-logo" />
+                    <button
+                        className="collapse-btn"
+                        onClick={() => setCollapsed(!collapsed)}
+                        title={collapsed ? "Expandir menú" : "Colapsar menú"}
+                    >
+                        {collapsed ? <MdMenu size={22} /> : <MdMenuOpen size={22} />}
+                    </button>
                 </div>
 
-                {/* Botón para colapsar/expandir (solo en desktop) */}
-                <button
-                    className="collapse-btn"
-                    onClick={() => setCollapsed(!collapsed)}
-                    title={collapsed ? "Expandir menú" : "Colapsar menú"}
-                >
-                    {collapsed ? <MdMenu size={20} /> : <MdMenuOpen size={20} />}
-                </button>
-
-                <nav aria-label="Menú principal">
-                    <ul className="nav-links">
+                {/* NAV */}
+                <nav className="sidebar-nav">
+                    <ul>
                         {links.map((link, i) => (
                             <li key={i}>
                                 <NavLink
@@ -72,27 +74,24 @@ const Sidebar = ({ open, setOpen, collapsed, setCollapsed }) => {
                                     title={collapsed ? link.label : ""}
                                 >
                                     <div className="nav-content">
-                                        {!collapsed && (
-                                            <span className="nav-label">{link.label}</span>
-                                        )}
-                                        <div className="nav-icon-container">
-                                            <link.icon className="nav-icon" size={20} />
-                                            {link.badge && (
+                                        <span className="nav-label">{link.label}</span>
+                                        <div className="nav-icon-wrapper">
+                                            <link.icon className="nav-icon" size={22} />
+                                            {link.badge > 0 && (
                                                 <span className="nav-badge">{link.badge}</span>
                                             )}
                                         </div>
                                     </div>
-                                    <div className="nav-indicator"></div>
                                 </NavLink>
                             </li>
                         ))}
                     </ul>
                 </nav>
 
-                {/* Footer del sidebar */}
+                {/* FOOTER */}
                 <div className="sidebar-footer">
                     <div className="user-info">
-                        <GiMuscleUp className="user-icon" size={24} />
+                        <GiMuscleUp className="user-icon" size={26} />
                         {!collapsed && (
                             <div className="user-details">
                                 <span className="user-role">Instructor</span>
@@ -103,6 +102,7 @@ const Sidebar = ({ open, setOpen, collapsed, setCollapsed }) => {
                     {!collapsed && (
                         <button className="logout-btn" title="Cerrar sesión">
                             <MdLogout size={18} />
+                            <span>Salir</span>
                         </button>
                     )}
                 </div>

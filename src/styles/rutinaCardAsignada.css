@@ -1,0 +1,205 @@
+:root {
+    --color-fondo: #ffffff;
+    --color-sombra: rgba(0, 0, 0, 0.08);
+    --color-texto: #111827;
+    --color-secundario: #6b7280;
+
+    /* Colores de progreso */
+    --progreso-alto: #16a34a;
+    --progreso-medio: #f59e0b;
+    --progreso-bajo: #ef4444;
+}
+
+/* Card principal */
+.rutina-card-pro {
+    background: var(--color-fondo);
+    border-radius: 16px;
+    box-shadow: 0 4px 14px var(--color-sombra);
+    overflow: hidden;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.25rem;
+    position: relative;
+    min-height: 230px;
+}
+
+.rutina-card-pro:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* HEADER */
+.rutina-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rutina-icon {
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
+    border-radius: 10px;
+    color: white;
+    padding: 0.45rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.estado-badge-pro {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.estado-badge-pro.activa { background: #22c55e; color: white; }
+.estado-badge-pro.completada { background: #3b82f6; color: white; }
+.estado-badge-pro.pendiente { background: #facc15; color: #78350f; }
+.estado-badge-pro.atrasada { background: #ef4444; color: white; }
+
+/* INFO */
+.rutina-info {
+    margin-top: 1rem;
+}
+
+.rutina-nombre {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-texto);
+    margin-bottom: 0.5rem;
+}
+
+.alumno-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 0.9rem;
+}
+
+.alumno-avatar {
+    color: #2563eb;
+}
+
+.alumno-text {
+    overflow: hidden;
+}
+
+.alumno-nombre {
+    font-weight: 600;
+    color: var(--color-texto);
+    margin: 0;
+}
+
+.alumno-email {
+    font-size: 0.85rem;
+    color: var(--color-secundario);
+    margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.rutina-detalles {
+    color: var(--color-texto);
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.rutina-detalles p {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    color: #374151;
+}
+
+.rutina-detalles strong {
+    font-weight: 600;
+}
+
+/* PROGRESO */
+.progreso-container {
+    margin-top: 1rem;
+}
+
+.progreso-barra {
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+}
+
+.progreso-relleno {
+    height: 8px;
+    border-radius: 5px;
+    transition: width 0.6s ease, background 0.3s ease;
+}
+
+.progreso-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--color-secundario);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .rutina-card-pro {
+        padding: 1rem;
+    }
+    .rutina-nombre {
+        font-size: 1.1rem;
+    }
+    .rutina-detalles {
+        font-size: 0.85rem;
+    }
+    .alumno-email {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .rutina-card-pro {
+        padding: 0.9rem;
+    }
+    .rutina-nombre {
+        font-size: 1rem;
+    }
+    .estado-badge-pro {
+        font-size: 0.65rem;
+    }
+}
+.disciplina-badge {
+    display: inline-block;
+    background: #eef2ff;
+    color: #1e40af;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+}
+
+/* 🔧 Corrige centrado de modales Bootstrap */
+.modal {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    z-index: 2000 !important;
+}
+
+.modal-backdrop.show {
+    opacity: 0.45 !important;
+}

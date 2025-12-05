@@ -3,7 +3,7 @@ import { Modal, Form, Button, Spinner, Alert } from "react-bootstrap";
 import { getActiveExercises, createManualProgress } from "../api/progreso";
 import Swal from "sweetalert2";
 
-const RegistrarProgresoModal = ({ show, onHide, alumno }) => {
+const RegistrarProgresoModal = ({ show, onHide, alumno, asignacion }) => {
     const [loading, setLoading] = useState(false);
     const [rutina, setRutina] = useState(null);
     const [ejercicios, setEjercicios] = useState([]);
@@ -18,10 +18,18 @@ const RegistrarProgresoModal = ({ show, onHide, alumno }) => {
     });
 
     useEffect(() => {
-        if (show && alumno) {
-            loadEjercicios();
+        if (show) {
+            if (asignacion && asignacion.ejercicios) {
+                // Si viene desde el detalle, usamos directamente los ejercicios de esa rutina
+                setRutina({ id: asignacion.id, nombre: asignacion.nombre });
+                setEjercicios(asignacion.ejercicios);
+            } else if (alumno) {
+                // Si no hay asignacion pasada, entonces cargamos la rutina activa
+                loadEjercicios();
+            }
         }
-    }, [show]);
+    }, [show, asignacion]);
+
 
     const loadEjercicios = async () => {
         setLoading(true);

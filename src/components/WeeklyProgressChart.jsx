@@ -1,127 +1,68 @@
+// WeeklyProgressChart.jsx
 import {
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
+    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from "recharts";
-import "../styles/dashboard.css";
+import { Box, Typography, Paper } from "@mui/material";
 
 const WeeklyProgressChart = ({ data }) => {
-    // Transformar los datos para el formato esperado por Recharts
-    const formatChartData = (rawData) => {
-        if (!rawData || rawData.length === 0) return [];
+    const chartData = data?.map((d, i) => ({
+        name: `Sem ${i + 1}`,
+        entrenamientos: d.total_entrenamientos,
+        completados: d.entrenamientos_completados,
+        actividad: (d.entrenamientos_completados / (d.total_entrenamientos || 1)) * 100
+    })) || [];
 
-        return rawData.map((item, index) => ({
-            name: index + 1, // Número del día (1, 2, 3, etc.)
-            entrenamientos: item.total_entrenamientos || 0,
-            completados: item.entrenamientos_completados || 0,
-            // Calcular un valor de "actividad" para mostrar en la gráfica
-            actividad: ((item.entrenamientos_completados || 0) / Math.max(item.total_entrenamientos || 1, 1)) * 100
-        }));
-    };
-
-    const chartData = formatChartData(data);
-
-    // Custom tooltip
-    const CustomTooltip = ({ active, payload, label }) => {
-        if (active && payload && payload.length) {
-            return (
-                <div className="custom-tooltip">
-                    <p className="tooltip-label">{`Día ${label}`}</p>
-                    <p className="tooltip-content">
-                        <span className="tooltip-value">
-                            Entrenamientos: {payload[0]?.payload?.entrenamientos || 0}
-                        </span>
-                    </p>
-                    <p className="tooltip-content">
-                        <span className="tooltip-value">
-                            Completados: {payload[0]?.payload?.completados || 0}
-                        </span>
-                    </p>
-                </div>
-            );
-        }
-        return null;
-    };
+    const avg = chartData.length ?
+        (chartData.reduce((sum, d) => sum + d.actividad, 0) / chartData.length).toFixed(1) :
+        0;
 
     return (
-        <section className="weekly-progress">
-            <div className="section-header">
-                <h2>Progreso Semanal</h2>
-                <span className="chart-indicator">
-                    <span className="indicator-dot"></span>
-                    Actividad
-                </span>
-            </div>
+        <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                Progreso Semanal
+            </Typography>
+            <Typography variant="body2" sx={{ color: "#64748b", mb: 2 }}>
+                Promedio de actividad: <strong>{avg}%</strong>
+            </Typography>
 
-            {chartData.length > 0 ? (
-                <div className="chart-container">
-                    <ResponsiveContainer width="100%" height={300}>
-                        <AreaChart
-                            data={chartData}
-                            margin={{
-                                top: 10,
-                                right: 30,
-                                left: 0,
-                                bottom: 0,
-                            }}
-                        >
+            {chartData.length ? (
+                <Box sx={{ height: 300 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                             <defs>
-                                <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor="#22c55e" stopOpacity={0.3} />
-                                    <stop offset="100%" stopColor="#22c55e" stopOpacity={0.05} />
+                                <linearGradient id="colorGreen" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.4} />
+                                    <stop offset="100%" stopColor="#10b981" stopOpacity={0.05} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                            <XAxis
-                                dataKey="name"
-                                axisLine={false}
-                                tickLine={false}
-                                tick={{ fontSize: 12, fill: '#6b7280' }}
+                            <XAxis dataKey="name" tick={{ fill: "#6b7280" }} />
+                            <YAxis tick={{ fill: "#6b7280" }} />
+                            <Tooltip
+                                contentStyle={{
+                                    backgroundColor: "rgba(255,255,255,0.9)",
+                                    borderRadius: 8,
+                                    boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+                                }}
                             />
-                            <YAxis
-                                axisLine={false}
-                                tickLine={false}
-                                tick={{ fontSize: 12, fill: '#6b7280' }}
-                                domain={[0, 'dataMax + 20']}
-                            />
-                            <Tooltip content={<CustomTooltip />} />
                             <Area
                                 type="monotone"
                                 dataKey="actividad"
-                                stroke="#22c55e"
+                                stroke="#10b981"
+                                fill="url(#colorGreen)"
                                 strokeWidth={2}
-                                fill="url(#colorGradient)"
-                                dot={{ fill: '#22c55e', strokeWidth: 2, r: 4 }}
-                                activeDot={{ r: 6, stroke: '#22c55e', strokeWidth: 2, fill: '#fff' }}
+                                dot={{ fill: "#10b981" }}
+                                activeDot={{ r: 6 }}
                             />
                         </AreaChart>
                     </ResponsiveContainer>
-
-                    {/* Etiquetas del eje X personalizadas */}
-                    <div className="chart-labels">
-                        <span>1</span>
-                        <span>2</span>
-                        <span>3</span>
-                        <span>4</span>
-                        <span>5</span>
-                        <span>6</span>
-                        <span>7</span>
-                        <span>8</span>
-                        <span>9</span>
-                        <span>10</span>
-                        <span>Actividad</span>
-                    </div>
-                </div>
+                </Box>
             ) : (
-                <div className="empty-chart">
-                    <p>No hay datos de progreso disponibles</p>
-                </div>
+                <Typography align="center" sx={{ color: "#9ca3af", py: 4 }}>
+                    No hay datos de progreso disponibles
+                </Typography>
             )}
-        </section>
+        </Paper>
     );
 };
 

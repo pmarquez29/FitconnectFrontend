@@ -1,143 +1,229 @@
-/* ============================
-   APPLE FITNESS CARD – FITCONNECT BLUE THEME
-   ============================ */
+/* =====================================
+   FITCONNECT PRO STYLE – v2 (FIXED)
+   ===================================== */
 
 :root {
-    --blue-main: #4a90e2;
-    --blue-light: #ecf4ff;
-    --blue-gradient: linear-gradient(135deg, #4a90e2 0%, #6cb5ff 100%);
+    --fit-blue: #2563eb;
+    --fit-light-blue: #ebf2ff;
+    --fit-gray: #f9fafb;
+    --fit-dark: #1e293b;
+    --fit-text: #334155;
+    --fit-muted: #64748b;
+    --fit-green: #22c55e;
+    --fit-red: #ef4444;
+    --fit-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* CARD GLOBAL */
+/* CARD GENERAL */
 .alumno-card {
-    background: linear-gradient(
-            135deg,
-            #ffffff 0%,
-            #f3f7ff 40%,
-            #e8f1ff 100%
-    );
-    border-radius: 22px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: var(--fit-shadow);
     padding: 22px;
-    box-shadow:
-            0 8px 20px rgba(0, 0, 0, 0.06),
-            0 3px 10px rgba(0, 0, 0, 0.04);
-    border: none;
-    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
+    position: relative;
     height: 100%;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
 }
 
 .alumno-card:hover {
-    transform: translateY(-6px);
-    box-shadow:
-            0 14px 34px rgba(0, 0, 0, 0.13),
-            0 8px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.15);
 }
 
-/* HEADER */
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
+/* Disciplina badge - ESQUINA SUPERIOR IZQUIERDA */
+.disciplina-badge-container {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 5;
 }
 
+/* Disciplina badge */
 .disciplina-badge {
-    padding: 6px 16px;
-    border-radius: 30px;
+    background: var(--fit-dark);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 700;
-    color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-.options-dropdown .dropdown-toggle {
-    background: none;
-    border: none;
-    color: #6a717d;
-    font-size: 18px;
+/* FIX PRINCIPAL: Dropdown en ESQUINA SUPERIOR DERECHA - SIN RECTÁNGULO VISIBLE */
+.options-dropdown {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+}
+
+/* Eliminar el dropdown wrapper que genera el rectángulo */
+.options-dropdown .dropdown {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    width: auto !important;
+    min-width: 0 !important;
+}
+
+/* Eliminar TODO estilo del toggle - SOLO LOS 3 PUNTOS */
+.custom-dropdown-toggle {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 4px 6px !important;
+    margin: 0 !important;
+    color: #64748b !important;
+    font-size: 20px;
+    cursor: pointer;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: 0.2s ease;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+}
+
+.custom-dropdown-toggle:hover,
+.custom-dropdown-toggle:focus,
+.custom-dropdown-toggle:active {
+    color: var(--fit-blue) !important;
+    transform: scale(1.15);
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.custom-dropdown-toggle::after {
+    display: none !important;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    border-radius: 12px;
+    padding: 6px 0;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    min-width: 170px;
+    overflow: hidden;
+    margin-top: 8px !important;
+}
+
+.dropdown-item {
+    font-size: 0.9rem;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--fit-text);
+}
+
+.dropdown-item:hover {
+    background: var(--fit-light-blue);
+    color: var(--fit-blue);
 }
 
 /* AVATAR */
 .avatar-container {
-    height: 110px; /* 🔥 altura fija */
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0 0 14px 0;
 }
 
 .alumno-foto {
     width: 90px;
     height: 90px;
     border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     object-fit: cover;
-    border: 4px solid white;
-    box-shadow:
-            0 3px 10px rgba(0,0,0,0.08),
-            0 2px 6px rgba(0,0,0,0.1);
-    transition: 0.25s ease;
+    transition: transform 0.3s ease;
 }
 
 .alumno-card:hover .alumno-foto {
-    transform: scale(1.06);
+    transform: scale(1.08);
 }
 
 /* NOMBRE */
 .alumno-nombre {
     text-align: center;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 800;
-    color: #1e2030;
-    margin-bottom: 14px;
+    color: var(--fit-dark);
+    margin-bottom: 16px;
 }
 
-/* GRID INFO */
+/* INFO GRID */
 .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 12px;
     margin-bottom: 18px;
-    min-height: 150px; /* 🔥 iguala altura */
 }
 
 .info-item {
-    background: white;
+    background: var(--fit-gray);
     border-radius: 14px;
     padding: 12px;
-    border: 1px solid #e3e9f5;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    border: 1px solid #e2e8f0;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.info-item:hover {
+    background: var(--fit-light-blue);
 }
 
 .info-label {
     font-size: 0.7rem;
-    color: #6c7682;
+    color: var(--fit-muted);
     text-transform: uppercase;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .info-value {
-    margin-top: 4px;
-    font-size: 0.87rem;
+    margin-top: 3px;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: #1f1f2f;
+    color: var(--fit-text);
+    word-break: break-word;
 }
 
 /* ESTADO */
 .estado-badge {
     padding: 4px 10px;
-    border-radius: 16px;
+    border-radius: 14px;
     font-size: 0.72rem;
     font-weight: 700;
     color: white;
 }
 
 .estado-badge.activo {
-    background: #32d657;
+    background: var(--fit-green);
 }
 
 .estado-badge.inactivo {
-    background: #ff6b6b;
+    background: var(--fit-red);
 }
 
 /* PROGRESO */
@@ -145,51 +231,104 @@
     margin-bottom: 18px;
 }
 
+.progreso-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--fit-muted);
+    margin-bottom: 5px;
+}
+
+.progreso-label {
+    font-weight: 600;
+}
+
+.progreso-value {
+    font-weight: 700;
+    color: var(--fit-blue);
+}
+
 .progreso {
     height: 10px;
-    background: #e3e8f5;
-    border-radius: 16px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .progreso-bar {
     height: 100%;
-    border-radius: 16px;
+    background: var(--fit-green);
+    border-radius: 10px;
     transition: width 0.4s ease;
 }
 
 /* ACCIONES */
 .acciones {
     display: flex;
+    flex-direction: column;
     gap: 10px;
     margin-top: auto;
 }
 
 .accion-btn {
-    flex: 1;
     background: white;
-    border: none;
-    padding: 12px;
-    border-radius: 14px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--blue-main);
-    border: 1px solid #e1e8f2;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    transition: 0.25s ease;
+    border: 1px solid #e2e8f0;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--fit-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
 .accion-btn:hover {
-    background: var(--blue-light);
+    background: var(--fit-light-blue);
     transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
 }
 
-/* Animación */
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .alumno-card {
+        padding: 16px;
+    }
+
+    .acciones {
+        gap: 8px;
+    }
+
+    .disciplina-badge {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+    }
+
+    .options-dropdown {
+        top: -8px;
+        right: -8px;
+    }
+}
+
+/* ANIMACIONES */
 @keyframes fade {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
-
-.alumno-card {
-    animation: fade 0.4s ease forwards;
-}
-

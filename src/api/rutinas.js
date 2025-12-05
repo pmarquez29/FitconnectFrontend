@@ -35,3 +35,9 @@ export const getRutinasAsignadas = async () => {
     const response = await axios.get(`${API_URL}/rutinas/alumno/mis-rutinas`, getAuthHeader());
     return response.data;
 };
+
+// Cambiar estado de rutina (pausar/reanudar)
+export const changeRutinaStatus = async (asignacionId, nuevoEstado) => {
+    const res = await axios.put(`${API_URL}/asignacion/${asignacionId}/estado`, { estado: nuevoEstado }, getAuthHeader());
+    return res.data;
+};

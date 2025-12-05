@@ -5,17 +5,16 @@ import AddRutinaModal from "../components/AddRutinaModal";
 import RutinaCardCatalogo from "../components/RutinaCardCatalogo";
 import RutinaCardAsignada from "../components/RutinaCardAsignada";
 import RutinaAsignadaDetailModal from "../components/RutinaAsignadaDetailModal";
+import RutinaCatalogoDetailModal from "../components/RutinaCatalogoDetailModal";
+import RutinaEditModal from "../components/RutinaEditModal";
+import AddRutinaCard from "../components/AddRutinaCard"; // 🆕 nuevo import
 import { getRutinas } from "../api/rutinas";
 import axios from "axios";
 import "../styles/layout.css";
 import "../styles/rutinas.css";
-import {Spinner} from "react-bootstrap";
-import RutinaCatalogoDetailModal from "../components/RutinaCatalogoDetailModal.jsx";
-import RutinaEditModal from "../components/RutinaEditModal.jsx";
-
+import { Spinner } from "react-bootstrap";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
-
 
 const RutinasPage = () => {
     const [activeTab, setActiveTab] = useState("catalogo");
@@ -28,9 +27,9 @@ const RutinasPage = () => {
     const [filterDisciplina, setFilterDisciplina] = useState("Todos");
     const [loading, setLoading] = useState(false);
     const [rutinaParaEditar, setRutinaParaEditar] = useState(null);
+    const [selectedAlumno, setSelectedAlumno] = useState(null);
 
     const token = localStorage.getItem("token");
-
     const loadedCatalogo = useRef(false);
     const loadedAsignadas = useRef(false);
 
@@ -96,10 +95,6 @@ const RutinasPage = () => {
         return (
             <div className="layout">
                 <Sidebar
-                    open={sidebarOpen}
-                    setOpen={setSidebarOpen}
-                    collapsed={sidebarCollapsed}
-                    setCollapsed={setSidebarCollapsed}
                 />
                 <main className="content">
                     <Header user={JSON.parse(localStorage.getItem("user") || "{}")} />
@@ -116,7 +111,12 @@ const RutinasPage = () => {
 
     return (
         <div className="layout">
-            <Sidebar />
+            <Sidebar
+                open={sidebarOpen}
+                setOpen={setSidebarOpen}
+                collapsed={sidebarCollapsed}
+                setCollapsed={setSidebarCollapsed}
+            />
             <main className="content">
                 <Header user={JSON.parse(localStorage.getItem("user"))} />
 
@@ -138,38 +138,49 @@ const RutinasPage = () => {
 
                 {/* Grid */}
                 <div className="rutinas-grid">
-                    {rutinasFiltradas.length === 0 ? (
-                        <p style={{ color: "#6b7280", fontStyle: "italic" }}>
-                            {loading ? "Cargando rutinas..." : "No hay rutinas para mostrar."}
-                        </p>
-                    ) : activeTab === "catalogo" ? (
-                        rutinasFiltradas.map((rutina) => (
-                            <RutinaCardCatalogo
-                                key={getRutinaKey(rutina, "catalogo")}
-                                rutina={rutina}
-                                onSelect={(id, action) => {
-                                    if (action === "editar") {
-                                        // abrir modal de edición (lo crearás después)
-                                        console.log("Editar rutina:", id);
-                                    } else {
-                                        // abrir modal de detalles
-                                        setSelectedRutinaCatalogo(id);
-                                    }
-                                }}
-                            />
+                    {activeTab === "catalogo" ? (
+                        <>
+                            {/* 🆕 Tarjeta para crear rutina */}
+                            <AddRutinaCard onClick={() => setShowAddModal(true)} />
 
-                        ))
+                            {rutinasFiltradas.length === 0 ? (
+                                <p style={{ color: "#6b7280", fontStyle: "italic" }}>
+                                    {loading ? "Cargando rutinas..." : "No hay rutinas para mostrar."}
+                                </p>
+                            ) : (
+                                rutinasFiltradas.map((rutina) => (
+                                    <RutinaCardCatalogo
+                                        key={getRutinaKey(rutina, "catalogo")}
+                                        rutina={rutina}
+                                        onSelect={(id, action) => {
+                                            if (action === "editar") {
+                                                console.log("Editar rutina:", id);
+                                            } else {
+                                                setSelectedRutinaCatalogo(id);
+                                            }
+                                        }}
+                                    />
+                                ))
+                            )}
+                        </>
                     ) : (
-                        rutinasFiltradas.map((rutina) => (
-                            <RutinaCardAsignada
-                                key={`asignada-${rutina.id}`}
-                                rutina={rutina}
-                                onSelect={(id) => {
-                                    console.log("Abriendo modal con asignación:", id);
-                                    setSelectedRutinaAsignada(id);
-                                }}
-                            />
-                        ))
+                        rutinasFiltradas.length === 0 ? (
+                            <p style={{ color: "#6b7280", fontStyle: "italic" }}>
+                                {loading ? "Cargando rutinas..." : "No hay rutinas para mostrar."}
+                            </p>
+                        ) : (
+                            rutinasFiltradas.map((rutina) => (
+                                <RutinaCardAsignada
+                                    key={`asignada-${rutina.id}`}
+                                    rutina={rutina}
+                                    onSelect={(id) => {
+                                        console.log("Abriendo modal con asignación:", id);
+                                        setSelectedRutinaAsignada(id);
+                                        setSelectedAlumno(rutina.alumno);
+                                    }}
+                                />
+                            ))
+                        )
                     )}
                 </div>
 
@@ -183,9 +194,14 @@ const RutinasPage = () => {
 
             <RutinaAsignadaDetailModal
                 show={!!selectedRutinaAsignada}
-                onHide={() => setSelectedRutinaAsignada(null)}
+                onHide={() => {
+                    setSelectedRutinaAsignada(null);
+                    setSelectedAlumno(null);
+                }}
                 asignacionId={selectedRutinaAsignada}
+                alumno={selectedAlumno}
             />
+
             <RutinaCatalogoDetailModal
                 show={!!selectedRutinaCatalogo}
                 onHide={() => setSelectedRutinaCatalogo(null)}
@@ -202,10 +218,6 @@ const RutinasPage = () => {
                 onHide={() => setRutinaParaEditar(null)}
                 onSave={fetchRutinasCatalogo}
             />
-
-
-
-
         </div>
     );
 };

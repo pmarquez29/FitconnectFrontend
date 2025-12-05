@@ -19,6 +19,8 @@ const EstadisticasPage = () => {
     const [progreso, setProgreso] = useState([]);
     const [disciplinas, setDisciplinas] = useState([]);
     const [topAlumnos, setTopAlumnos] = useState([]);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -33,7 +35,12 @@ const EstadisticasPage = () => {
 
     return (
         <div className="layout">
-            <Sidebar />
+            <Sidebar
+                open={sidebarOpen}
+                setOpen={setSidebarOpen}
+                collapsed={sidebarCollapsed}
+                setCollapsed={setSidebarCollapsed}
+            />
             <main className="content">
                 <Header user={user} />
 

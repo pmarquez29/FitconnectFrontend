@@ -35,3 +35,22 @@
 .rutina-card-body p {
     margin: 0.3rem 0;
 }
+
+/* Tarjeta de agregar rutina */
+.add-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 2px dashed #0d6efd;
+    background-color: #f8f9fa;
+    transition: all 0.25s ease-in-out;
+}
+
+.add-card:hover {
+    background-color: #eaf2ff;
+    border-color: #0b5ed7;
+    transform: scale(1.03);
+}
+

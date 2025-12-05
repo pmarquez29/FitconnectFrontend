@@ -1,0 +1,63 @@
+.modal-backdrop.show {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 15, 15, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+.modal-contenido {
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
+    padding: 25px;
+    border-radius: 12px;
+    width: 420px;
+    max-width: 90%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    animation: fadeInUp 0.3s ease;
+}
+
+.modal-contenido h5 {
+    font-weight: 700;
+    color: #0d6efd;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modal-contenido input,
+.modal-contenido textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.modal-contenido input:focus,
+.modal-contenido textarea:focus {
+    border-color: #0d6efd;
+    outline: none;
+}
+
+.modal-contenido button.btn-success {
+    background: #28a745;
+    border: none;
+    font-weight: 600;
+}
+
+.modal-contenido button.btn-light {
+    background: #f8f9fa;
+    border: 1px solid #ccc;
+}
+
+@keyframes fadeInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

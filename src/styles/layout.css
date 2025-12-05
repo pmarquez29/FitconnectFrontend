@@ -1,4 +1,6 @@
-/* ===== Variables de color (coherentes con dashboard.css) ===== */
+/* ========================================
+   🎨 VARIABLES DE COLOR
+======================================== */
 :root {
     --primary: #217EFD;
     --primary-light: #4a97ff;
@@ -10,7 +12,9 @@
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-/* ==================== LAYOUT ==================== */
+/* ========================================
+   🧩 LAYOUT BASE
+======================================== */
 .layout {
     display: flex;
     min-height: 100vh;
@@ -20,66 +24,54 @@
 .content {
     flex: 1;
     padding: 2rem;
-    margin-left: 280px; /* Espacio para sidebar expandido */
+    margin-left: 280px;
     transition: margin-left 0.3s ease;
 }
 
 .content.collapsed {
-    margin-left: 80px; /* Espacio para sidebar colapsado */
+    margin-left: 80px;
 }
 
-/* ==================== SIDEBAR STYLES ==================== */
+/* ========================================
+   🧭 SIDEBAR
+======================================== */
 .sidebar {
     width: 280px;
-    background: #ffffff;
+    background: #fff;
     color: #333;
     position: fixed;
-    left: 0;
     top: 0;
+    left: 0;
     height: 100vh;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1000;
+    border-right: 1px solid var(--border);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    border-right: 1px solid #e5e7eb;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: width 0.3s ease;
+    z-index: 1000;
 }
 
 .sidebar.collapsed {
     width: 80px;
 }
 
-.sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    display: none; /* Oculto por defecto, solo visible en móvil */
-}
-
 .logo {
-    padding: 2rem 1.5rem 1rem 1.5rem;
+    padding: 2rem 1.5rem 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
 }
 
 .sidebar.collapsed .logo {
-    padding: 2rem 0.5rem 1rem 0.5rem;
+    padding: 1.5rem 0.5rem;
 }
 
 .logo img {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    flex-shrink: 0;
 }
 
 .logo-text {
@@ -87,33 +79,28 @@
     font-weight: 700;
     color: #1e293b;
     letter-spacing: 0.05em;
-    white-space: nowrap;
-    opacity: 1;
-    transition: opacity 0.2s ease;
 }
 
 .sidebar.collapsed .logo-text {
-    opacity: 0;
     display: none;
 }
 
-/* Botón para colapsar/expandir */
+/* === Botón colapsar === */
 .collapse-btn {
     position: absolute;
-    top: 1.5rem;
+    top: 1.2rem;
     right: 1rem;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
     width: 32px;
     height: 32px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #64748b;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #64748b;
-    transition: all 0.2s ease;
-    z-index: 10;
+    transition: all 0.2s;
 }
 
 .collapse-btn:hover {
@@ -121,32 +108,12 @@
     color: #334155;
 }
 
-.sidebar.collapsed .collapse-btn {
-    right: 0.5rem;
-}
-.nav-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem; /* Espaciado entre el label y el icono */
-}
-
-.nav-label {
-    text-align: left;
-    flex: 1; /* Ocupa el espacio disponible a la izquierda */
-}
-
-.nav-icon-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+/* === Enlaces de navegación === */
 .nav-links {
     flex: 1;
-    padding: 0;
     list-style: none;
     margin: 0;
+    padding: 0;
     overflow-y: auto;
 }
 
@@ -163,20 +130,11 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
-    color: #64748b;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    position: relative;
     border-radius: 8px;
+    color: #64748b;
     font-weight: 500;
-    min-height: 44px; /* Altura mínima consistente */
-}
-
-.sidebar.collapsed .nav-link {
-    justify-content: center;
-    gap: 0;
-    padding: 0.75rem;
-    min-width: 44px;
+    text-decoration: none;
+    transition: all 0.2s;
 }
 
 .nav-link:hover {
@@ -189,68 +147,48 @@
     color: #2563eb;
 }
 
+.sidebar.collapsed .nav-link {
+    justify-content: center;
+    gap: 0;
+    padding: 0.75rem;
+}
+
+/* === Iconos y labels === */
 .nav-icon-container {
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+    position: relative;
 }
 
 .nav-icon {
     width: 20px;
     height: 20px;
-    flex-shrink: 0;
-}
-
-.nav-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: #3b82f6;
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 600;
-    min-width: 16px;
-    height: 16px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    z-index: 1;
 }
 
 .nav-label {
     font-size: 0.875rem;
-    font-weight: 500;
-    opacity: 1;
-    transition: opacity 0.2s ease;
-    white-space: nowrap;
     flex: 1;
-    text-align: left;
+    white-space: nowrap;
 }
 
 .sidebar.collapsed .nav-label {
-    opacity: 0;
-    width: 0;
-    overflow: hidden;
+    display: none;
 }
 
+/* === Footer del sidebar === */
 .sidebar-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #e5e7eb;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     margin-top: auto;
 }
 
 .sidebar.collapsed .sidebar-footer {
-    padding: 1rem 0.5rem;
     justify-content: center;
+    padding: 1rem 0.5rem;
 }
 
 .user-info {
@@ -259,34 +197,14 @@
     gap: 0.75rem;
 }
 
-.sidebar.collapsed .user-info {
-    justify-content: center;
-}
-
-.user-icon {
-    color: #3b82f6;
-    flex-shrink: 0;
-}
-
-.user-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-}
-
-.sidebar.collapsed .user-details {
-    display: none;
-}
-
 .user-role {
     font-size: 0.875rem;
     font-weight: 600;
-    color: #1e293b;
 }
 
 .user-status {
     font-size: 0.75rem;
-    color: #64748b;
+    color: var(--text-light);
 }
 
 .logout-btn {
@@ -296,7 +214,7 @@
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 6px;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
 }
 
 .logout-btn:hover {
@@ -304,11 +222,9 @@
     color: #334155;
 }
 
-.sidebar.collapsed .logout-btn {
-    display: none;
-}
-
-/* ===== Header ===== */
+/* ========================================
+   🧩 HEADER
+======================================== */
 .header {
     display: flex;
     justify-content: space-between;
@@ -324,6 +240,7 @@
 }
 
 .search-bar {
+    position: relative;
     display: flex;
     align-items: center;
     background: var(--primary-bg);
@@ -331,7 +248,6 @@
     border-radius: var(--radius);
     flex: 1;
     max-width: 350px;
-    position: relative;
 }
 
 .search-bar input {
@@ -354,49 +270,18 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    position: relative;
 }
 
-/* ===== Notificaciones ===== */
-.notification {
-    position: relative;
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 0.5rem;
-    border-radius: 8px;
-    transition: background 0.2s ease;
-}
-
-.notification:hover {
-    background: #f3f4f6;
-}
-
-.notification .dropdown {
-    position: absolute;
-    top: 130%;
-    right: 0;
-    background: #fff;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1rem;
-    font-size: 0.9rem;
-    min-width: 200px;
-    z-index: 20;
-}
-
-/* ===== Usuario ===== */
-.user {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
+/* === Notificaciones y usuario === */
+.notification, .user {
     position: relative;
     padding: 0.5rem;
     border-radius: 8px;
-    transition: background 0.2s ease;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-.user:hover {
+.notification:hover, .user:hover {
     background: #f3f4f6;
 }
 
@@ -404,42 +289,31 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    object-fit: cover;
-}
-.avatar, .sidebar-avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    object-fit: cover;
     border: 2px solid #ddd;
-    transition: transform 0.2s ease;
+    object-fit: cover;
+    transition: transform 0.2s;
 }
 
-.avatar:hover, .sidebar-avatar:hover {
+.user .avatar:hover {
     transform: scale(1.05);
 }
 
-
-.user span {
-    font-weight: 500;
-    color: var(--text);
-}
-
-.user .dropdown {
+/* === Dropdowns === */
+.dropdown {
     position: absolute;
-    top: 130%;
+    top: 120%;
     right: 0;
     background: #fff;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     padding: 0.8rem 0;
-    min-width: 150px;
+    min-width: 160px;
     display: flex;
     flex-direction: column;
-    z-index: 20;
+    z-index: 2000;
 }
 
-.user .dropdown button {
+.dropdown button {
     background: none;
     border: none;
     padding: 0.6rem 1rem;
@@ -447,95 +321,54 @@
     font-size: 0.9rem;
     color: var(--text);
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.2s;
 }
 
-.user .dropdown button:hover {
+.dropdown button:hover {
     background: var(--primary-bg);
     color: var(--primary);
 }
 
-/* Botón hamburguesa */
-.hamburger {
-    display: none;
-    font-size: 1.5rem;
-    background: none;
-    border: none;
-    color: var(--primary);
-    cursor: pointer;
-    margin-right: 1rem;
-    padding: 0.5rem;
-    border-radius: 6px;
-    transition: background 0.2s ease;
+/* ========================================
+   💡 FIX MODAL CENTRADO (Bootstrap)
+======================================== */
+.modal {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    z-index: 2000 !important;
 }
 
-.hamburger:hover {
-    background: var(--primary-bg);
+.modal-backdrop.show {
+    opacity: 0.45 !important;
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
-
-/* Tablet y móvil */
+/* ========================================
+   📱 RESPONSIVE
+======================================== */
 @media (max-width: 1023px) {
     .sidebar {
-        left: -280px; /* Oculto por defecto en móvil/tablet */
+        left: -280px;
     }
-
     .sidebar.open {
         left: 0;
     }
-
-    .sidebar-overlay {
-        display: block; /* Mostrar overlay en móvil */
-    }
-
     .content {
-        margin-left: 0; /* Sin margen en móvil */
+        margin-left: 0;
         padding: 1rem;
     }
-
     .hamburger {
         display: block;
     }
-
-    .header {
-        margin-bottom: 1rem;
-        padding: 0.8rem 1rem;
-    }
 }
 
-/* Móvil pequeño */
 @media (max-width: 600px) {
-    .search-bar {
-        max-width: 200px;
-        margin: 0 0.5rem;
-    }
-
     .user span {
-        display: none; /* Solo avatar en móvil */
+        display: none;
     }
-
     .content {
         padding: 0.5rem;
-    }
-}
-
-/* Desktop - asegurar que el sidebar esté visible */
-@media (min-width: 1024px) {
-    .sidebar {
-        left: 0; /* Siempre visible en desktop */
-        position: fixed;
-    }
-
-    .content {
-        margin-left: 280px; /* Espacio para sidebar */
-    }
-
-    .hamburger {
-        display: none; /* Ocultar hamburger en desktop */
-    }
-
-    .sidebar-overlay {
-        display: none; /* No overlay en desktop */
     }
 }

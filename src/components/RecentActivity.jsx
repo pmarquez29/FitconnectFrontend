@@ -1,170 +1,109 @@
-import { styled } from '@mui/material/styles';
+// RecentActivity.jsx
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Chip,
-    IconButton,
-    Typography,
-    Box
-} from '@mui/material';
-import { MoreVert } from '@mui/icons-material';
-import "../styles/dashboard.css";
+    Table, TableBody, TableCell, TableContainer,
+    TableHead, TableRow, Paper, Chip, Typography, Box
+} from "@mui/material";
+import { CheckCircle, PendingActions, ErrorOutline } from "@mui/icons-material";
 
-// Styled components
-const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
-    borderRadius: 16,
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-    overflow: 'hidden',
-    marginTop: 16,
-}));
-
-const StyledTableHead = styled(TableHead)(({ theme }) => ({
-    '& .MuiTableCell-head': {
-        backgroundColor: '#f8fafc',
-        fontWeight: 600,
-        fontSize: '0.75rem',
-        letterSpacing: '0.05em',
-        textTransform: 'uppercase',
-        color: '#64748b',
-        borderBottom: 'none',
-        padding: '16px',
-    }
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:hover': {
-        backgroundColor: '#f8fafc',
-    },
-    '& .MuiTableCell-root': {
-        borderBottom: '1px solid #f1f5f9',
-        padding: '16px',
-    }
-}));
-
-const StatusChip = styled(Chip)(({ status }) => ({
-    fontSize: '0.75rem',
-    fontWeight: 500,
-    height: 24,
-    ...(status === 'completado' && {
-        backgroundColor: '#dcfce7',
-        color: '#16a34a',
-    }),
-    ...(status === 'pendiente' && {
-        backgroundColor: '#fef3c7',
-        color: '#d97706',
-    }),
-    ...(status === 'activa' && {
-        backgroundColor: '#dbeafe',
-        color: '#2563eb',
-    }),
-}));
+const statusStyles = {
+    completado: { color: "#16a34a", background: "#dcfce7", icon: <CheckCircle fontSize="small" /> },
+    pendiente: { color: "#d97706", background: "#fef3c7", icon: <PendingActions fontSize="small" /> },
+    activa: { color: "#2563eb", background: "#dbeafe", icon: <PendingActions fontSize="small" /> },
+    inactiva: { color: "#dc2626", background: "#fee2e2", icon: <ErrorOutline fontSize="small" /> }
+};
 
 const RecentActivity = ({ actividad }) => {
-    const getStatusLabel = (estado) => {
-        const statusMap = {
-            'activa': 'completado',
-            'completada': 'completado',
-            'pendiente': 'pendiente',
-            'inactiva': 'pendiente'
-        };
-        return statusMap[estado?.toLowerCase()] || 'pendiente';
+    const getStatus = (estado) => {
+        const key = estado?.toLowerCase();
+        return statusStyles[key] || statusStyles["pendiente"];
     };
 
     return (
-        <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#1f2937' }}>
+        <Paper
+            elevation={3}
+            sx={{
+                p: 3,
+                borderRadius: 3,
+                mb: 3,
+                transition: "0.3s ease all",
+            }}
+        >
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Actividad Reciente
             </Typography>
 
             {actividad && actividad.length > 0 ? (
-                <StyledTableContainer component={Paper}>
+                <TableContainer>
                     <Table>
-                        <StyledTableHead>
-                            <TableRow>
-                                <TableCell>Actividad Reciente</TableCell>
-                                <TableCell>Estado</TableCell>
+                        <TableHead>
+                            <TableRow sx={{ background: "#f8fafc" }}>
+                                <TableCell>Alumno</TableCell>
                                 <TableCell>Rutina</TableCell>
-                                <TableCell>Carga (Kg)</TableCell>
-                                <TableCell>Fecha Completada</TableCell>
+                                <TableCell>Estado</TableCell>
+                                <TableCell>Fecha</TableCell>
                                 <TableCell>Hora</TableCell>
-                                <TableCell width={60}></TableCell>
                             </TableRow>
-                        </StyledTableHead>
+                        </TableHead>
                         <TableBody>
-                            {actividad.map((item, index) => (
-                                <StyledTableRow key={index}>
-                                    <TableCell>
-                                        <Typography variant="body2" fontWeight={500}>
-                                            {item.alumno || 'N/A'}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <StatusChip
-                                            label={getStatusLabel(item.estado).toUpperCase()}
-                                            status={getStatusLabel(item.estado)}
-                                            size="small"
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant="body2">
-                                            {item.rutina || 'Sin rutina'}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant="body2" fontWeight={500}>
-                                            60 {/* Placeholder */}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {item.fecha_asignacion ?
-                                                new Date(item.fecha_asignacion).toLocaleDateString('es-ES') :
-                                                'N/A'
-                                            }
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {item.fecha_asignacion ?
-                                                new Date(item.fecha_asignacion).toLocaleTimeString('es-ES', {
-                                                    hour: '2-digit',
-                                                    minute: '2-digit'
-                                                }) :
-                                                'N/A'
-                                            }
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <IconButton size="small" sx={{ color: '#64748b' }}>
-                                            <MoreVert fontSize="small" />
-                                        </IconButton>
-                                    </TableCell>
-                                </StyledTableRow>
-                            ))}
+                            {actividad.map((item, index) => {
+                                const status = getStatus(item.estado);
+                                return (
+                                    <TableRow
+                                        key={index}
+                                        sx={{
+                                            "&:nth-of-type(odd)": { backgroundColor: "#fcfcfc" },
+                                            "&:hover": { backgroundColor: "#f9fafb" },
+                                            transition: "0.2s ease",
+                                        }}
+                                    >
+                                        <TableCell sx={{ fontWeight: 500 }}>{item.alumno}</TableCell>
+                                        <TableCell>{item.rutina}</TableCell>
+                                        <TableCell>
+                                            <Chip
+                                                icon={status.icon}
+                                                label={item.estado?.toUpperCase() || "PENDIENTE"}
+                                                sx={{
+                                                    color: status.color,
+                                                    backgroundColor: status.background,
+                                                    fontWeight: 600,
+                                                }}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            {item.fecha_asignacion
+                                                ? new Date(item.fecha_asignacion).toLocaleDateString("es-ES")
+                                                : "N/A"}
+                                        </TableCell>
+                                        <TableCell>
+                                            {item.fecha_asignacion
+                                                ? new Date(item.fecha_asignacion).toLocaleTimeString("es-ES", {
+                                                    hour: "2-digit",
+                                                    minute: "2-digit"
+                                                })
+                                                : "N/A"}
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
                         </TableBody>
                     </Table>
-                </StyledTableContainer>
+                </TableContainer>
             ) : (
                 <Box
                     sx={{
-                        textAlign: 'center',
-                        py: 8,
-                        backgroundColor: 'white',
-                        borderRadius: 2,
-                        border: '1px solid #e5e7eb'
+                        textAlign: "center",
+                        py: 6,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        color: "#9ca3af",
                     }}
                 >
-                    <Typography color="text.secondary">
-                        No hay actividad reciente
-                    </Typography>
+                    <PendingActions sx={{ fontSize: 48, color: "#cbd5e1", mb: 1 }} />
+                    <Typography>No hay actividad reciente</Typography>
                 </Box>
             )}
-        </Box>
+        </Paper>
     );
 };
 

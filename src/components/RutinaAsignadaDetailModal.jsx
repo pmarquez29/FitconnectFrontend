@@ -13,10 +13,8 @@ import {
     ListGroup,
 } from "react-bootstrap";
 import {
-    FaDumbbell,
     FaUser,
     FaClock,
-    FaBullseye,
     FaCalendarAlt,
     FaHeartbeat,
     FaWeightHanging,
@@ -25,16 +23,21 @@ import {
     FaPauseCircle,
     FaPlayCircle,
 } from "react-icons/fa";
+import Swal from "sweetalert2";
 import axios from "axios";
+import { createManualProgress, cambiarEstadoRutina } from "../api/progreso";
+import RegistrarProgresoModal from "./RegistrarProgresoModal";
 
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
-const RutinaAsignadaDetailModal = ({ show, onHide, asignacionId }) => {
+const RutinaAsignadaDetailModal = ({ show, onHide, asignacionId, alumno }) => {
     const [asignacion, setAsignacion] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [registrando, setRegistrando] = useState(false);
+    const [showRegistrarProgreso, setShowRegistrarProgreso] = useState(false);
+
 
     useEffect(() => {
         if (show && asignacionId) fetchAsignacion();
@@ -59,34 +62,75 @@ const RutinaAsignadaDetailModal = ({ show, onHide, asignacionId }) => {
 
     const handleRegistrarProgreso = async () => {
         if (!asignacion) return;
-        try {
-            setRegistrando(true);
-            const token = localStorage.getItem("token");
-            await axios.post(
-                `${API_URL}/asignacion/${asignacion.id}/progreso`,
-                {},
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            fetchAsignacion();
-        } catch (err) {
-            console.error("Error al registrar progreso:", err);
-        } finally {
-            setRegistrando(false);
+
+        const { value: formValues } = await Swal.fire({
+            title: "Registrar progreso manual",
+            html: `
+                <select id="ejercicio" class="swal2-select">
+                    ${asignacion.ejercicios
+                .map((e) => `<option value="${e.id}">${e.nombre}</option>`)
+                .join("")}
+                </select>
+                <input id="series" type="number" class="swal2-input" placeholder="Series completadas">
+                <input id="reps" type="text" class="swal2-input" placeholder="Repeticiones realizadas">
+                <input id="peso" type="number" class="swal2-input" placeholder="Peso utilizado (kg)">
+                <textarea id="notas" class="swal2-textarea" placeholder="Notas adicionales"></textarea>
+            `,
+            focusConfirm: false,
+            confirmButtonText: "Guardar",
+            showCancelButton: true,
+            cancelButtonText: "Cancelar",
+            preConfirm: () => ({
+                ejercicio_id: document.getElementById("ejercicio").value,
+                series_completadas: document.getElementById("series").value,
+                repeticiones_realizadas: document.getElementById("reps").value,
+                peso_utilizado: document.getElementById("peso").value,
+                notas: document.getElementById("notas").value,
+            }),
+        });
+
+        if (formValues) {
+            try {
+                setRegistrando(true);
+                await createManualProgress({
+                    asignacion_id: asignacion.id,
+                    ...formValues,
+                    completado: true,
+                });
+
+                Swal.fire("✅ Éxito", "Progreso registrado correctamente", "success");
+                fetchAsignacion();
+            } catch (err) {
+                console.error("Error al registrar progreso:", err);
+                Swal.fire("Error", "No se pudo registrar el progreso", "error");
+            } finally {
+                setRegistrando(false);
+            }
         }
     };
 
-    const handlePausar = async () => {
+    const handleToggleEstado = async () => {
         if (!asignacion) return;
+
+        const nuevo_estado = asignacion.estado === "pausada" ? "activa" : "pausada";
+        const confirm = await Swal.fire({
+            title: `${nuevo_estado === "pausada" ? "Pausar" : "Reanudar"} rutina`,
+            text: `¿Seguro que deseas ${nuevo_estado === "pausada" ? "pausar" : "reanudar"} esta rutina?`,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Sí",
+            cancelButtonText: "Cancelar",
+        });
+
+        if (!confirm.isConfirmed) return;
+
         try {
-            const token = localStorage.getItem("token");
-            await axios.patch(
-                `${API_URL}/asignacion/${asignacion.id}/pausar`,
-                {},
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            await cambiarEstadoRutina(asignacion.id, nuevo_estado);
+            Swal.fire("✅ Éxito", `Rutina ${nuevo_estado === "pausada" ? "pausada" : "reanudada"} correctamente.`, "success");
             fetchAsignacion();
         } catch (err) {
-            console.error("Error al pausar rutina:", err);
+            console.error("Error al cambiar estado:", err);
+            Swal.fire("Error", "No se pudo cambiar el estado de la rutina", "error");
         }
     };
 
@@ -113,7 +157,6 @@ const RutinaAsignadaDetailModal = ({ show, onHide, asignacionId }) => {
                     <Alert variant="danger">{error}</Alert>
                 ) : asignacion ? (
                     <>
-                        {/* Cabecera */}
                         <Row className="align-items-center mb-3">
                             <Col>
                                 <h4 className="fw-bold mb-0">{asignacion.nombre}</h4>
@@ -135,7 +178,7 @@ const RutinaAsignadaDetailModal = ({ show, onHide, asignacionId }) => {
                             </Col>
                         </Row>
 
-                        {/* Info General */}
+                        {/* Info general */}
                         <Card className="shadow-sm mb-3 border-light">
                             <Card.Body>
                                 <Row className="gy-2">
@@ -146,9 +189,7 @@ const RutinaAsignadaDetailModal = ({ show, onHide, asignacionId }) => {
                                     <Col md={6}>
                                         <FaCalendarAlt className="me-2 text-success" />
                                         <strong>Inicio:</strong>{" "}
-                                        {new Date(asignacion.fecha_inicio).toLocaleDateString(
-                                            "es-ES"
-                                        )}
+                                        {new Date(asignacion.fecha_inicio).toLocaleDateString("es-ES")}
                                     </Col>
                                 </Row>
                             </Card.Body>
@@ -159,8 +200,7 @@ const RutinaAsignadaDetailModal = ({ show, onHide, asignacionId }) => {
                             <Card className="shadow-sm mb-3 border-info">
                                 <Card.Body>
                                     <FaUser className="me-2 text-info" />
-                                    <strong>Alumno:</strong> {asignacion.alumno.nombre} (
-                                    {asignacion.alumno.email})
+                                    <strong>Alumno:</strong> {asignacion.alumno.nombre} ({asignacion.alumno.email})
                                 </Card.Body>
                             </Card>
                         )}
@@ -212,17 +252,36 @@ const RutinaAsignadaDetailModal = ({ show, onHide, asignacionId }) => {
 
             <Modal.Footer className="d-flex justify-content-between">
                 <div>
-                    <Button
-                        variant="outline-success"
-                        onClick={handleRegistrarProgreso}
-                        disabled={registrando}
+                    <button
+                        className="btn btn-secondary"
+                        onClick={() => setShowRegistrarProgreso(true)}
                     >
-                        <FaPlayCircle className="me-2" />
-                        Registrar Progreso
-                    </Button>
-                    <Button variant="outline-warning" onClick={handlePausar} className="ms-2">
-                        <FaPauseCircle className="me-2" />
-                        Pausar Rutina
+                        ✅ Registrar progreso manual
+                    </button>
+
+                    <RegistrarProgresoModal
+                        show={showRegistrarProgreso}
+                        onHide={() => setShowRegistrarProgreso(false)}
+                        alumno={alumno}
+                        asignacion={asignacion}  // 👈 añadimos esta línea
+                    />
+
+
+
+                    <Button
+                        variant={asignacion?.estado === "pausada" ? "outline-primary" : "outline-warning"}
+                        className="ms-2"
+                        onClick={handleToggleEstado}
+                    >
+                        {asignacion?.estado === "pausada" ? (
+                            <>
+                                <FaPlayCircle className="me-2" /> Reanudar Rutina
+                            </>
+                        ) : (
+                            <>
+                                <FaPauseCircle className="me-2" /> Pausar Rutina
+                            </>
+                        )}
                     </Button>
                 </div>
                 <Button variant="secondary" onClick={onHide}>
@@ -230,7 +289,7 @@ const RutinaAsignadaDetailModal = ({ show, onHide, asignacionId }) => {
                 </Button>
             </Modal.Footer>
         </Modal>,
-        document.body // 👈 esto lo monta directamente sobre el body
+        document.body
     );
 };
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { getPerfil, updatePerfil, changePassword } from "../api/configuracion";
+import {getPerfil, updatePerfil, changePassword, deleteCuenta} from "../api/configuracion";
+
 import axios from "axios";
 import {
     Spinner,
@@ -26,43 +27,6 @@ const ConfigPerfil = () => {
     const [loading, setLoading] = useState(true);
     const [mensaje, setMensaje] = useState("");
     const [error, setError] = useState("");
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-            const base64String = reader.result.split(",")[1];
-            setFotoPreview(reader.result);
-
-            try {
-                const token = localStorage.getItem("token");
-                await axios.put(
-                    `${API_URL}/instructor/perfil-foto`,
-                    { foto: base64String },
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
-
-                // ✅ Guardar nueva foto en localStorage para otros componentes
-                const updatedUser = { ...(JSON.parse(localStorage.getItem("user")) || {}) };
-                updatedUser.foto = base64String;
-                localStorage.setItem("user", JSON.stringify(updatedUser));
-
-                // ✅ Disparar evento global para Header/Sidebar
-                window.dispatchEvent(new CustomEvent("profileUpdated", { detail: updatedUser }));
-
-                setMensaje("🖼️ Foto actualizada correctamente");
-                setTimeout(() => setMensaje(""), 3000);
-            } catch (err) {
-                console.error("Error actualizando foto:", err);
-                setError("No se pudo actualizar la foto");
-                setTimeout(() => setError(""), 3000);
-            }
-        };
-
-        reader.readAsDataURL(file);
-    };
 
 
     useEffect(() => {
@@ -136,13 +100,14 @@ const ConfigPerfil = () => {
         }
     };
 
-    // 🔹 Subir foto
+    // 🔹 Subir foto (UNIFICADO)
     const handleFotoChange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        const preview = URL.createObjectURL(file);
-        setFotoPreview(preview);
+        // Crear preview local inmediatamente
+        const previewUrl = URL.createObjectURL(file);
+        setFotoPreview(previewUrl);
 
         const formData = new FormData();
         formData.append("foto", file);
@@ -155,12 +120,41 @@ const ConfigPerfil = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
+
+            // ✅ Convertir imagen a base64 para guardar en localStorage
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result.split(",")[1];
+
+                // Actualizar localStorage
+                const updatedUser = JSON.parse(localStorage.getItem("user")) || {};
+                updatedUser.foto = base64String;
+                localStorage.setItem("user", JSON.stringify(updatedUser));
+
+                // 🔥 Disparar evento para actualizar Header
+                window.dispatchEvent(
+                    new CustomEvent("profileUpdated", { detail: updatedUser })
+                );
+            };
+            reader.readAsDataURL(file);
+
             setMensaje("📸 Foto actualizada correctamente");
             setTimeout(() => setMensaje(""), 3000);
         } catch (err) {
             console.error("Error subiendo foto:", err);
             setError("No se pudo actualizar la foto");
+            setTimeout(() => setError(""), 3000);
         }
+    };
+
+    const handleDelete = async () => {
+        const confirm = window.confirm(
+            "⚠️ ¿Seguro que deseas eliminar tu cuenta? Esta acción es irreversible."
+        );
+        if (!confirm) return;
+        await deleteCuenta();
+        localStorage.clear();
+        window.location.href = "/";
     };
 
     if (loading)
@@ -346,6 +340,15 @@ const ConfigPerfil = () => {
                 <Button variant="success" onClick={handleChangePassword}>
                     Actualizar contraseña
                 </Button>
+                <hr />
+                {/* 🔹 ELIMINAR CUENTA */}
+                <div className="config-section danger-section">
+                    <h3>Gestión de Cuenta</h3>
+                    <p>Eliminar tu cuenta borrará todos tus datos y rutinas.</p>
+                    <button className="btn-danger" onClick={handleDelete}>
+                        Eliminar cuenta
+                    </button>
+                </div>
             </Card.Body>
         </Card>
     );

@@ -13,10 +13,13 @@ const MensajesPage = () => {
     const [chats, setChats] = useState([]);
     const [selectedChat, setSelectedChat] = useState(null);
     const [search, setSearch] = useState("");
-    const [searchParams] = useSearchParams(); // 👈 Hook de React Router
+    const [searchParams] = useSearchParams();
 
     const user = JSON.parse(localStorage.getItem("user"));
-    const chatParam = searchParams.get("chat"); // 👈 leer el parámetro ?chat=ID
+    const chatParam = searchParams.get("chat");
+
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     useEffect(() => {
         // Cargar todos los chats
@@ -42,7 +45,12 @@ const MensajesPage = () => {
 
     return (
         <div className="layout">
-            <Sidebar />
+            <Sidebar
+                open={sidebarOpen}
+                setOpen={setSidebarOpen}
+                collapsed={sidebarCollapsed}
+                setCollapsed={setSidebarCollapsed}
+            />
             <main className="content mensajes-page">
                 <Header user={user} />
                 <div className="mensajes-container">

@@ -1,15 +1,29 @@
-import { useState, useEffect } from "react";
-import { Dropdown, Spinner } from "react-bootstrap";
+import { useState } from "react";
+import { Dropdown, Spinner, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { FaEllipsisH, FaUser, FaEnvelope, FaClock, FaComments, FaEdit, FaTrash, FaEye } from "react-icons/fa";
+import {
+    FaEllipsisH,
+    FaUser,
+    FaEnvelope,
+    FaClock,
+    FaComments,
+    FaEdit,
+    FaTrash,
+    FaEye
+} from "react-icons/fa";
 import { MdFitnessCenter } from "react-icons/md";
 import "../styles/alumnos.css";
 import defaultAvatar from "../assets/avatar.jpg";
 import RutinaCard from "./RutinaCard";
-import {getRutinasPorAlumno} from "../api/rutinas.js"; // 👈 usar tu componente de rutinas
-import { Modal } from "react-bootstrap";
+import { getRutinasPorAlumno } from "../api/rutinas.js";
 
-const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, onChat }) => {
+const AlumnoCard = ({
+                        alumno,
+                        onEdit,
+                        onDelete,
+                        onViewProfile,
+                        onAssignRoutine,
+                    }) => {
     const [imageError, setImageError] = useState(false);
     const [showRutinasModal, setShowRutinasModal] = useState(false);
     const [rutinas, setRutinas] = useState([]);
@@ -18,20 +32,20 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
 
     const getDisciplinaColor = (disciplina) => {
         const colors = {
-            'GIMNASIO': '#4a90e2',
-            'CALISTENIA': '#28a745',
-            'FUTSAL': '#ffc107',
-            'VOLLEY': '#17a2b8',
-            'BASQUET': '#dc3545'
+            GIMNASIO: "#4a90e2",
+            CALISTENIA: "#28a745",
+            FUTSAL: "#ffc107",
+            VOLLEY: "#17a2b8",
+            BASQUET: "#dc3545",
         };
-        return colors[disciplina?.toUpperCase()] || '#6c757d';
+        return colors[disciplina?.toUpperCase()] || "#6c757d";
     };
 
     const getProgressColor = (progress) => {
-        if (progress >= 80) return '#32d657';
-        if (progress >= 60) return '#f7b801';
-        if (progress >= 40) return '#f18701';
-        return '#ff6b6b';
+        if (progress >= 80) return "#32d657";
+        if (progress >= 60) return "#f7b801";
+        if (progress >= 40) return "#f18701";
+        return "#ff6b6b";
     };
 
     const formatDate = (dateString) => {
@@ -47,7 +61,7 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
 
     const truncateEmail = (email, maxLength = 20) => {
         if (!email || email.length <= maxLength) return email;
-        const [name, domain] = email.split('@');
+        const [name, domain] = email.split("@");
         if (name.length > maxLength - 3) {
             return `${name.substring(0, maxLength - 3)}...@${domain}`;
         }
@@ -61,10 +75,9 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
         setLoadingRutinas(true);
         try {
             const data = await getRutinasPorAlumno(alumno.usuario_id || alumno.id);
-
             setRutinas(data);
         } catch (err) {
-            console.error("Error cargando rutinas del alumno:", err);
+            console.error("Error cargando rutinas:", err);
         } finally {
             setLoadingRutinas(false);
         }
@@ -72,31 +85,25 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
 
     return (
         <div className="alumno-card">
-            {/* HEADER */}
-            <div className="card-header">
-                <div
-                    className="disciplina-badge"
-                    style={{ backgroundColor: getDisciplinaColor(alumno.disciplina) }}
-                >
-                    {alumno.disciplina?.toUpperCase() || "GENERAL"}
-                </div>
-
-                <Dropdown className="options-dropdown" drop="down">
-                    <Dropdown.Toggle variant="light" className="options-btn">
+            {/* DROPDOWN EN LA ESQUINA - MÍNIMO ESPACIO */}
+            <div className="options-dropdown">
+                <Dropdown drop="down" align="end">
+                    <Dropdown.Toggle
+                        as="div"
+                        bsPrefix="custom-dropdown-toggle"
+                    >
                         <FaEllipsisH />
                     </Dropdown.Toggle>
 
-                    <Dropdown.Menu align="end">
+                    <Dropdown.Menu>
                         <Dropdown.Item onClick={() => onViewProfile?.(alumno)}>
-                            <FaEye className="me-2" />
-                            Ver Perfil
+                            <FaEye className="me-2 text-primary" /> Ver Perfil
                         </Dropdown.Item>
                         <Dropdown.Item onClick={() => onEdit?.(alumno)}>
-                            <FaEdit className="me-2" />
-                            Editar
+                            <FaEdit className="me-2 text-warning" /> Editar
                         </Dropdown.Item>
                         <Dropdown.Item onClick={() => onAssignRoutine?.(alumno)}>
-                            <MdFitnessCenter className="me-2" />
+                            <MdFitnessCenter className="me-2 text-success" />{" "}
                             Asignar Rutina
                         </Dropdown.Item>
                         <Dropdown.Divider />
@@ -104,11 +111,22 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                             onClick={() => onDelete?.(alumno)}
                             className="text-danger"
                         >
-                            <FaTrash className="me-2" />
-                            Eliminar
+                            <FaTrash className="me-2" /> Eliminar
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
+            </div>
+
+            {/* DISCIPLINA BADGE */}
+            <div className="disciplina-badge-container">
+                <div
+                    className="disciplina-badge"
+                    style={{
+                        backgroundColor: getDisciplinaColor(alumno.disciplina),
+                    }}
+                >
+                    {alumno.disciplina?.toUpperCase() || "GENERAL"}
+                </div>
             </div>
 
             {/* AVATAR */}
@@ -116,7 +134,8 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                 <img
                     src={
                         !imageError && alumno.foto
-                            ? alumno.foto.startsWith("data:image") || alumno.foto.startsWith("http")
+                            ? alumno.foto.startsWith("data:image") ||
+                            alumno.foto.startsWith("http")
                                 ? alumno.foto
                                 : defaultAvatar
                             : defaultAvatar
@@ -127,7 +146,7 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                 />
             </div>
 
-            {/* Nombre */}
+            {/* NOMBRE */}
             <h3 className="alumno-nombre">
                 {alumno.nombre} {alumno.apellido}
             </h3>
@@ -165,7 +184,11 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                 <div className="info-item">
                     <div className="info-label">Estado</div>
                     <div className="info-value">
-                        <span className={`estado-badge ${alumno.activo ? "activo" : "inactivo"}`}>
+                        <span
+                            className={`estado-badge ${
+                                alumno.activo ? "activo" : "inactivo"
+                            }`}
+                        >
                             {alumno.activo ? "Activo" : "Inactivo"}
                         </span>
                     </div>
@@ -183,7 +206,7 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                         className="progreso-bar"
                         style={{
                             width: `${progress}%`,
-                            backgroundColor: getProgressColor(progress)
+                            backgroundColor: getProgressColor(progress),
                         }}
                     />
                 </div>
@@ -191,7 +214,12 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
 
             {/* ACCIONES */}
             <div className="acciones">
-                <button className="accion-btn" onClick={() => navigate(`/alumnos/${alumno.usuario_id || alumno.id}`)}>
+                <button
+                    className="accion-btn"
+                    onClick={() =>
+                        navigate(`/alumnos/${alumno.usuario_id || alumno.id}`)
+                    }
+                >
                     <FaUser size={14} />
                     Perfil
                 </button>
@@ -201,14 +229,24 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                     Rutinas
                 </button>
 
-                <button className="accion-btn" onClick={() => navigate(`/mensajes?chat=${alumno.usuario_id || alumno.id}`)}>
+                <button
+                    className="accion-btn"
+                    onClick={() =>
+                        navigate(`/mensajes?chat=${alumno.usuario_id || alumno.id}`)
+                    }
+                >
                     <FaComments size={14} />
                     Stats
                 </button>
             </div>
 
             {/* MODAL DE RUTINAS */}
-            <Modal show={showRutinasModal} onHide={() => setShowRutinasModal(false)} size="lg" centered>
+            <Modal
+                show={showRutinasModal}
+                onHide={() => setShowRutinasModal(false)}
+                size="lg"
+                centered
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Rutinas de {alumno.nombre}</Modal.Title>
                 </Modal.Header>
@@ -221,7 +259,11 @@ const AlumnoCard = ({ alumno, onEdit, onDelete, onViewProfile, onAssignRoutine, 
                     ) : rutinas.length > 0 ? (
                         <div className="rutinas-list">
                             {rutinas.map((r) => (
-                                <RutinaCard key={r.id} rutina={r} onClick={() => console.log("Abrir detalle", r.id)} />
+                                <RutinaCard
+                                    key={r.id}
+                                    rutina={r}
+                                    onClick={() => console.log("Abrir detalle", r.id)}
+                                />
                             ))}
                         </div>
                     ) : (

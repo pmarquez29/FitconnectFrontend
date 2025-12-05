@@ -1,60 +1,95 @@
+/* styles/estadisticas.css */
+
 .estadisticas-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 1rem;
+}
+
+.estadisticas-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.estadisticas-header p {
+    color: #6b7280;
+    font-size: 0.9rem;
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .stat-card {
     display: flex;
     align-items: center;
     gap: 1rem;
-    background: white;
-    border-radius: 10px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
     padding: 1rem 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.stat-card:hover { transform: translateY(-3px); }
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
 
 .icon-box {
-    width: 50px;
-    height: 50px;
+    font-size: 1.8rem;
+    width: 45px;
+    height: 45px;
     border-radius: 10px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 1.4rem;
+    justify-content: center;
 }
 
-.chart-container {
-    background: white;
-    border-radius: 10px;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+.stat-card h4 {
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+    color: #374151;
+}
+
+.stat-card p {
+    font-size: 1.3rem;
+    font-weight: 700;
 }
 
 .estadisticas-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 1.5rem;
-    margin: 1.5rem 0;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.chart-container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+}
+
+.chart-container h3 {
+    margin-bottom: 1rem;
+    color: #1e293b;
 }
 
 .top-alumnos {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
 }
 
 .top-alumnos th, .top-alumnos td {
-    padding: 0.75rem;
+    padding: 0.8rem;
     border-bottom: 1px solid #e5e7eb;
     text-align: left;
 }
@@ -62,30 +97,34 @@
 .alumno-cell {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
 }
 
 .alumno-cell img {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
 }
 
 .progress-bar.small {
-    width: 100%;
+    width: 100px;
     height: 8px;
-    background: #e5e7eb;
-    border-radius: 4px;
-    margin-top: 0.25rem;
+    background: #f3f4f6;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 4px;
+    position: relative;
 }
 
 .progress-bar .progress {
-    height: 8px;
-    border-radius: 4px;
+    height: 100%;
+    border-radius: 5px;
 }
 
 .progress-label {
-    font-size: 0.8rem;
-    color: #6b7280;
     margin-left: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
