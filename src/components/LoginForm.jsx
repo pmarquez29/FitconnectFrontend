@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { login } from "../api/auth";
+import { login, recoverPassword } from "../api/auth"; // Importamos recoverPassword
+import Swal from "sweetalert2";
 
 const LoginForm = ({ onLoginSuccess }) => {
     const [email, setEmail] = useState("");
@@ -27,6 +28,41 @@ const LoginForm = ({ onLoginSuccess }) => {
         }
     };
 
+    // 🆕 Lógica de recuperación de contraseña
+    const handleForgotPassword = async (e) => {
+        e.preventDefault();
+
+        const { value: emailInput } = await Swal.fire({
+            title: 'Recuperar Contraseña',
+            input: 'email',
+            inputLabel: 'Ingresa tu correo electrónico',
+            inputPlaceholder: 'ejemplo@correo.com',
+            inputValue: email, // Pre-llenar si el usuario ya escribió algo
+            showCancelButton: true,
+            confirmButtonText: 'Enviar enlace',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#0a4ef5',
+            inputValidator: (value) => {
+                if (!value) return 'Debes escribir un correo';
+            }
+        });
+
+        if (emailInput) {
+            try {
+                // Llamamos a la API simulada
+                await recoverPassword(emailInput);
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Enviado!',
+                    text: `Si ${emailInput} está registrado, recibirás un correo con las instrucciones.`,
+                    confirmButtonColor: '#0a4ef5'
+                });
+            } catch (error) {
+                Swal.fire('Error', 'Hubo un problema al procesar la solicitud', 'error');
+            }
+        }
+    };
+
     return (
         <form className="login-form" onSubmit={handleSubmit}>
             {error && <p className="error">{error}</p>}
@@ -35,7 +71,7 @@ const LoginForm = ({ onLoginSuccess }) => {
             <input
                 type="email"
                 id="email"
-                placeholder="Ingresa tu nombre de usuario"
+                placeholder="Ingresa tu correo"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -60,7 +96,9 @@ const LoginForm = ({ onLoginSuccess }) => {
                     />
                     Recordar sesión
                 </label>
-                <a href="#" className="forgot-password">
+
+                {/* 🆕 Enlace funcional */}
+                <a href="#" className="forgot-password" onClick={handleForgotPassword}>
                     ¿Olvidaste tu contraseña?
                 </a>
             </div>

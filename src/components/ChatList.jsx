@@ -5,7 +5,6 @@ const ChatList = ({ chats, selectedChat, onSelect, search, setSearch }) => {
         <div className="chat-list">
             <div className="chat-list-header">
                 <h2>Mensajes</h2>
-                <button className="new-chat">+</button>
             </div>
             <input
                 type="text"
@@ -22,28 +21,32 @@ const ChatList = ({ chats, selectedChat, onSelect, search, setSearch }) => {
                     .map((chat) => (
                         <li
                             key={chat.id}
-                            className={`chat-item ${chat.tipo === "sistema" ? "system" : ""} ${selectedChat?.id === chat.id ? "active" : ""}`}
+                            className={`chat-item ${selectedChat?.id === chat.id ? "active" : ""}`}
                             onClick={() => onSelect(chat)}
                         >
-                            <img
-                                src={chat.usuario.foto || "/assets/logo.png"}
-                                alt={chat.usuario.nombre}
-                                className="chat-avatar"
-                            />
-                            <div className="chat-info">
-                                <strong>{chat.usuario.nombre}</strong>
-                                <p>{chat.ultimoMensaje?.contenido || "Sin mensajes"}</p>
+                            <div className="chat-item-content">
+                                <img
+                                    src={chat.usuario.foto || "/assets/avatar.jpg"}
+                                    alt={chat.usuario.nombre}
+                                    className="chat-avatar"
+                                />
+                                <div className="chat-info">
+                                    <strong>{chat.usuario.nombre}</strong>
+                                    <p>{chat.ultimoMensaje?.contenido || "Sin mensajes"}</p>
+                                </div>
                             </div>
-                            <span className="chat-time">{
-                                new Date(chat.ultimoMensaje?.fecha_envio).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-                            }</span>
+                            <div className="chat-meta">
+                                {chat.ultimoMensaje &&
+                                    new Date(chat.ultimoMensaje.fecha_envio).toLocaleTimeString([], {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })}
+                            </div>
                         </li>
 
                     ))}
             </ul>
-
         </div>
-
     );
 };
 

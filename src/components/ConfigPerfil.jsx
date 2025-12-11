@@ -1,17 +1,9 @@
 import { useState, useEffect } from "react";
-import {getPerfil, updatePerfil, changePassword, deleteCuenta} from "../api/configuracion";
-
+import { getPerfil, updatePerfil, changePassword, deleteCuenta } from "../api/configuracion";
 import axios from "axios";
-import {
-    Spinner,
-    Form,
-    Button,
-    Row,
-    Col,
-    Alert,
-    Card,
-    Image,
-} from "react-bootstrap";
+import { Spinner, Form, Alert } from "react-bootstrap";
+import Swal from "sweetalert2"; // Usaremos SweetAlert para que se vea mejor que window.confirm
+import { FaCamera, FaSave, FaLock, FaTrashAlt, FaUserEdit, FaPhone, FaAward, FaBriefcase } from "react-icons/fa";
 import "../styles/configuracion.css";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
@@ -19,93 +11,105 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 const ConfigPerfil = () => {
     const [perfil, setPerfil] = useState(null);
     const [fotoPreview, setFotoPreview] = useState(null);
-    const [passwords, setPasswords] = useState({
-        actual: "",
-        nueva: "",
-        confirmar: "",
-    });
+    const [passwords, setPasswords] = useState({ actual: "", nueva: "", confirmar: "" });
     const [loading, setLoading] = useState(true);
-    const [mensaje, setMensaje] = useState("");
+
+    // Estados para feedback visual
+    const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
 
-
     useEffect(() => {
-        const fetchPerfil = async () => {
-            try {
-                const data = await getPerfil();
-                setPerfil(data);
-
-                // Generar preview si hay foto
-                if (data.foto?.data) {
-                    const byteArray = new Uint8Array(data.foto.data);
-                    let binary = "";
-                    byteArray.forEach((b) => (binary += String.fromCharCode(b)));
-                    const base64 = window.btoa(binary);
-                    setFotoPreview(`data:image/jpeg;base64,${base64}`);
-                }
-
-            } catch (err) {
-                console.error("Error obteniendo perfil:", err);
-                setError("No se pudo cargar el perfil.");
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchPerfil();
     }, []);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setPerfil((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleSave = async () => {
+    const fetchPerfil = async () => {
         try {
-            await updatePerfil(perfil);
-            setMensaje("✅ Perfil actualizado correctamente");
-            setTimeout(() => setMensaje(""), 3000);
+            const data = await getPerfil();
+            setPerfil(data);
+
+            if (data.foto?.data) {
+                const byteArray = new Uint8Array(data.foto.data);
+                let binary = "";
+                byteArray.forEach((b) => (binary += String.fromCharCode(b)));
+                const base64 = window.btoa(binary);
+                setFotoPreview(`data:image/jpeg;base64,${base64}`);
+            }
         } catch (err) {
-            setError("No se pudo actualizar el perfil");
-            setTimeout(() => setError(""), 3000);
+            console.error("Error:", err);
+            setError("No se pudo cargar el perfil.");
+        } finally {
+            setLoading(false);
         }
     };
 
-    // 🔹 Validaciones de contraseña
-    const validarPassword = () => {
-        if (!passwords.actual || !passwords.nueva || !passwords.confirmar) {
-            setError("Debes completar todos los campos de contraseña");
-            return false;
+    // 🔹 MANEJO DE CAMBIOS EN INPUTS ANIDADOS
+    const handleInstructorChange = (e) => {
+        const { name, value } = e.target;
+        setPerfil((prev) => ({
+            ...prev,
+            Instructor: {
+                ...prev.Instructor,
+                [name]: value,
+            },
+        }));
+    };
+
+    // 🔹 GUARDAR SOLO DATOS DE TEXTO (SOLUCIÓN AL ERROR PAYLOAD TOO LARGE)
+    const handleSave = async () => {
+        setSaving(true);
+        setError("");
+        try {
+            // ⚠️ FILTRAMOS DATOS: No enviamos 'foto' ni todo el objeto 'perfil'
+            const payload = {
+                telefono: perfil.telefono,
+                especialidad: perfil.Instructor?.especialidad,
+                experiencia: perfil.Instructor?.experiencia,
+                certificaciones: perfil.Instructor?.certificaciones
+            };
+
+            await updatePerfil(payload);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Perfil actualizado',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } catch (err) {
+            console.error(err);
+            Swal.fire('Error', 'No se pudo actualizar el perfil', 'error');
+        } finally {
+            setSaving(false);
         }
-        if (passwords.nueva.length < 6) {
-            setError("La nueva contraseña debe tener al menos 6 caracteres");
-            return false;
-        }
-        if (passwords.nueva !== passwords.confirmar) {
-            setError("Las contraseñas no coinciden");
-            return false;
-        }
-        return true;
     };
 
     const handleChangePassword = async () => {
-        if (!validarPassword()) return;
+        if (!passwords.actual || !passwords.nueva || !passwords.confirmar) {
+            Swal.fire('Atención', 'Todos los campos son obligatorios', 'warning');
+            return;
+        }
+        if (passwords.nueva.length < 6) {
+            Swal.fire('Atención', 'La nueva contraseña debe tener al menos 6 caracteres', 'warning');
+            return;
+        }
+        if (passwords.nueva !== passwords.confirmar) {
+            Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
+            return;
+        }
+
         try {
             await changePassword(passwords);
-            setMensaje("🔐 Contraseña actualizada correctamente");
+            Swal.fire('Éxito', 'Contraseña actualizada correctamente', 'success');
             setPasswords({ actual: "", nueva: "", confirmar: "" });
-            setTimeout(() => setMensaje(""), 3000);
         } catch (err) {
-            setError("Error al cambiar la contraseña");
-            setTimeout(() => setError(""), 3000);
+            Swal.fire('Error', err.response?.data?.error || 'Error al cambiar contraseña', 'error');
         }
     };
 
-    // 🔹 Subir foto (UNIFICADO)
     const handleFotoChange = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Crear preview local inmediatamente
         const previewUrl = URL.createObjectURL(file);
         setFotoPreview(previewUrl);
 
@@ -121,236 +125,188 @@ const ConfigPerfil = () => {
                 },
             });
 
-            // ✅ Convertir imagen a base64 para guardar en localStorage
+            // Actualizar localStorage y evento
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result.split(",")[1];
-
-                // Actualizar localStorage
                 const updatedUser = JSON.parse(localStorage.getItem("user")) || {};
                 updatedUser.foto = base64String;
                 localStorage.setItem("user", JSON.stringify(updatedUser));
-
-                // 🔥 Disparar evento para actualizar Header
-                window.dispatchEvent(
-                    new CustomEvent("profileUpdated", { detail: updatedUser })
-                );
+                window.dispatchEvent(new CustomEvent("profileUpdated", { detail: updatedUser }));
             };
             reader.readAsDataURL(file);
 
-            setMensaje("📸 Foto actualizada correctamente");
-            setTimeout(() => setMensaje(""), 3000);
+            Swal.fire({
+                icon: 'success',
+                title: 'Foto actualizada',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
         } catch (err) {
-            console.error("Error subiendo foto:", err);
-            setError("No se pudo actualizar la foto");
-            setTimeout(() => setError(""), 3000);
+            Swal.fire('Error', 'No se pudo subir la foto', 'error');
         }
     };
 
     const handleDelete = async () => {
-        const confirm = window.confirm(
-            "⚠️ ¿Seguro que deseas eliminar tu cuenta? Esta acción es irreversible."
-        );
-        if (!confirm) return;
-        await deleteCuenta();
-        localStorage.clear();
-        window.location.href = "/";
+        const result = await Swal.fire({
+            title: '¿Eliminar cuenta?',
+            text: "Esta acción no se puede deshacer. Perderás todos tus alumnos y rutinas.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await deleteCuenta();
+                localStorage.clear();
+                window.location.href = "/";
+            } catch (err) {
+                Swal.fire('Error', 'No se pudo eliminar la cuenta', 'error');
+            }
+        }
     };
 
-    if (loading)
-        return (
-            <div className="text-center mt-4">
-                <Spinner animation="border" /> Cargando perfil...
-            </div>
-        );
+    if (loading) return <div className="text-center mt-5"><Spinner animation="border" variant="primary" /></div>;
 
     return (
-        <Card className="config-card">
-            <Card.Body>
-                <h3 className="mb-4">Perfil del Instructor</h3>
+        <div className="config-container fade-in">
+            {error && <Alert variant="danger">{error}</Alert>}
 
-                {mensaje && <Alert variant="success">{mensaje}</Alert>}
-                {error && <Alert variant="danger">{error}</Alert>}
-
-                {/* 🔹 FOTO DE PERFIL */}
-                <div className="text-center mb-4">
-                    <Image
-                        src={fotoPreview || "/default-avatar.png"}
-                        roundedCircle
-                        width="120"
-                        height="120"
-                        style={{ objectFit: "cover", border: "2px solid #ccc" }}
-                    />
-                    <div className="mt-2">
-                        <Form.Label
-                            htmlFor="foto"
-                            className="btn btn-outline-secondary btn-sm"
-                            style={{ cursor: "pointer" }}
-                        >
-                            Cambiar foto
-                        </Form.Label>
-                        <Form.Control
-                            type="file"
-                            id="foto"
-                            accept="image/*"
-                            style={{ display: "none" }}
-                            onChange={handleFotoChange}
-                        />
+            {/* 📸 SECCIÓN 1: IDENTIDAD */}
+            <div className="config-card identity-card">
+                <div className="avatar-section">
+                    <div className="avatar-wrapper">
+                        <img src={fotoPreview || "/assets/avatar.png"} alt="Perfil" className="profile-avatar" />
+                        <label htmlFor="foto-upload" className="camera-btn">
+                            <FaCamera />
+                        </label>
+                        <input type="file" id="foto-upload" hidden accept="image/*" onChange={handleFotoChange} />
+                    </div>
+                    <div className="user-info">
+                        <h2>{perfil?.nombre} {perfil?.apellido}</h2>
+                        <span className="badge-rol">{perfil?.rol?.toUpperCase()}</span>
+                        <p className="email-text">{perfil?.email}</p>
                     </div>
                 </div>
+            </div>
 
-                {/* 🔹 DATOS PERSONALES */}
-                <Row className="mb-3">
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Label>Nombre</Form.Label>
-                            <Form.Control value={perfil?.nombre || ""} disabled readOnly />
-                        </Form.Group>
-                    </Col>
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Label>Correo</Form.Label>
-                            <Form.Control value={perfil?.email || ""} disabled readOnly />
-                        </Form.Group>
-                    </Col>
-                </Row>
-
-                <Row className="mb-3">
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Label>Teléfono</Form.Label>
-                            <Form.Control
-                                name="telefono"
+            {/* 📝 SECCIÓN 2: DATOS PROFESIONALES */}
+            <div className="config-card">
+                <div className="card-header-custom">
+                    <FaUserEdit /> <h3>Información Profesional</h3>
+                </div>
+                <div className="form-grid">
+                    <div className="form-group">
+                        <label>Teléfono</label>
+                        <div className="input-icon-wrapper">
+                            <FaPhone className="icon" />
+                            <input
+                                type="text"
                                 value={perfil?.telefono || ""}
-                                onChange={handleChange}
+                                onChange={(e) => setPerfil({...perfil, telefono: e.target.value})}
                             />
-                        </Form.Group>
-                    </Col>
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Label>Disciplina</Form.Label>
-                            <Form.Control
-                                value={perfil?.Disciplina?.nombre || ""}
-                                disabled
-                                readOnly
-                            />
-                        </Form.Group>
-                    </Col>
-                </Row>
-
-                <Row className="mb-3">
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Label>Especialidad</Form.Label>
-                            <Form.Control
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label>Disciplina</label>
+                        <div className="input-icon-wrapper disabled">
+                            <FaBriefcase className="icon" />
+                            <input type="text" value={perfil?.Disciplina?.nombre || ""} disabled />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label>Especialidad</label>
+                        <div className="input-icon-wrapper">
+                            <FaAward className="icon" />
+                            <input
+                                type="text"
                                 name="especialidad"
                                 value={perfil?.Instructor?.especialidad || ""}
-                                onChange={(e) =>
-                                    setPerfil({
-                                        ...perfil,
-                                        Instructor: {
-                                            ...perfil.Instructor,
-                                            especialidad: e.target.value,
-                                        },
-                                    })
-                                }
+                                onChange={handleInstructorChange}
                             />
-                        </Form.Group>
-                    </Col>
-                    <Col md={6}>
-                        <Form.Group>
-                            <Form.Label>Experiencia (años)</Form.Label>
-                            <Form.Control
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label>Experiencia (años)</label>
+                        <div className="input-icon-wrapper">
+                            <FaBriefcase className="icon" />
+                            <input
                                 type="number"
                                 name="experiencia"
                                 value={perfil?.Instructor?.experiencia || ""}
-                                onChange={(e) =>
-                                    setPerfil({
-                                        ...perfil,
-                                        Instructor: {
-                                            ...perfil.Instructor,
-                                            experiencia: e.target.value,
-                                        },
-                                    })
-                                }
+                                onChange={handleInstructorChange}
                             />
-                        </Form.Group>
-                    </Col>
-                </Row>
-
-                <Form.Group className="mb-3">
-                    <Form.Label>Certificaciones</Form.Label>
-                    <Form.Control
-                        as="textarea"
-                        rows={2}
-                        name="certificaciones"
-                        value={perfil?.Instructor?.certificaciones || ""}
-                        onChange={(e) =>
-                            setPerfil({
-                                ...perfil,
-                                Instructor: {
-                                    ...perfil.Instructor,
-                                    certificaciones: e.target.value,
-                                },
-                            })
-                        }
-                    />
-                </Form.Group>
-
-                <Button variant="primary" onClick={handleSave}>
-                    Guardar cambios
-                </Button>
-
-                <hr />
-
-                {/* 🔹 CAMBIO DE CONTRASEÑA */}
-                <h5 className="mt-4">Cambiar Contraseña</h5>
-                <Row className="mb-3">
-                    <Col md={4}>
-                        <Form.Control
-                            type="password"
-                            placeholder="Contraseña actual"
-                            value={passwords.actual}
-                            onChange={(e) =>
-                                setPasswords({ ...passwords, actual: e.target.value })
-                            }
-                        />
-                    </Col>
-                    <Col md={4}>
-                        <Form.Control
-                            type="password"
-                            placeholder="Nueva contraseña"
-                            value={passwords.nueva}
-                            onChange={(e) =>
-                                setPasswords({ ...passwords, nueva: e.target.value })
-                            }
-                        />
-                    </Col>
-                    <Col md={4}>
-                        <Form.Control
-                            type="password"
-                            placeholder="Confirmar nueva contraseña"
-                            value={passwords.confirmar}
-                            onChange={(e) =>
-                                setPasswords({ ...passwords, confirmar: e.target.value })
-                            }
-                        />
-                    </Col>
-                </Row>
-                <Button variant="success" onClick={handleChangePassword}>
-                    Actualizar contraseña
-                </Button>
-                <hr />
-                {/* 🔹 ELIMINAR CUENTA */}
-                <div className="config-section danger-section">
-                    <h3>Gestión de Cuenta</h3>
-                    <p>Eliminar tu cuenta borrará todos tus datos y rutinas.</p>
-                    <button className="btn-danger" onClick={handleDelete}>
-                        Eliminar cuenta
+                        </div>
+                    </div>
+                    <div className="form-group full-width">
+                        <label>Certificaciones y Logros</label>
+                        <textarea
+                            className="textarea-custom"
+                            rows="3"
+                            name="certificaciones"
+                            value={perfil?.Instructor?.certificaciones || ""}
+                            onChange={handleInstructorChange}
+                        ></textarea>
+                    </div>
+                </div>
+                <div className="action-row">
+                    <button className="btn-save" onClick={handleSave} disabled={saving}>
+                        {saving ? <Spinner size="sm" animation="border" /> : <><FaSave /> Guardar Cambios</>}
                     </button>
                 </div>
-            </Card.Body>
-        </Card>
+            </div>
+
+            {/* 🔐 SECCIÓN 3: SEGURIDAD */}
+            <div className="config-grid-dual">
+                <div className="config-card">
+                    <div className="card-header-custom">
+                        <FaLock /> <h3>Seguridad</h3>
+                    </div>
+                    <div className="security-form">
+                        <input
+                            type="password"
+                            placeholder="Contraseña actual"
+                            className="input-simple"
+                            value={passwords.actual}
+                            onChange={e => setPasswords({...passwords, actual: e.target.value})}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Nueva contraseña"
+                            className="input-simple"
+                            value={passwords.nueva}
+                            onChange={e => setPasswords({...passwords, nueva: e.target.value})}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Confirmar nueva"
+                            className="input-simple"
+                            value={passwords.confirmar}
+                            onChange={e => setPasswords({...passwords, confirmar: e.target.value})}
+                        />
+                        <button className="btn-password" onClick={handleChangePassword}>
+                            Actualizar Contraseña
+                        </button>
+                    </div>
+                </div>
+
+                <div className="config-card danger-zone">
+                    <div className="card-header-custom text-danger">
+                        <FaTrashAlt /> <h3>Zona de Peligro</h3>
+                    </div>
+                    <p>Si eliminas tu cuenta, se perderán todos los datos de tus alumnos, rutinas y progresos de forma permanente.</p>
+                    <button className="btn-delete" onClick={handleDelete}>
+                        Eliminar Cuenta
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 };
 

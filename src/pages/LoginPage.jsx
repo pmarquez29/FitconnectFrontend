@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Importamos Link
 import LoginForm from "../components/LoginForm";
 import "../styles/login.css";
 import logo from "../assets/logo.png";
@@ -27,13 +27,15 @@ const LoginPage = () => {
                         Gestiona tus alumnos y rutinas desde un solo lugar
                     </p>
 
+                    {/* El formulario ya maneja internamente el "Olvidé contraseña" */}
                     <LoginForm onLoginSuccess={handleLoginSuccess} />
 
                     <p className="register-text">
                         ¿No tienes cuenta?{" "}
-                        <a href="#" className="register-link">
+                        {/* 🆕 Usamos Link para navegar sin recargar */}
+                        <Link to="/register" className="register-link">
                             Regístrate aquí
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>

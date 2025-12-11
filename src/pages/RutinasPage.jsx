@@ -10,7 +10,6 @@ import RutinaEditModal from "../components/RutinaEditModal";
 import AddRutinaCard from "../components/AddRutinaCard"; // 🆕 nuevo import
 import { getRutinas } from "../api/rutinas";
 import axios from "axios";
-import "../styles/layout.css";
 import "../styles/rutinas.css";
 import { Spinner } from "react-bootstrap";
 

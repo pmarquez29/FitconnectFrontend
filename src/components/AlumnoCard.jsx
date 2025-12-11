@@ -14,8 +14,8 @@ import {
 import { MdFitnessCenter } from "react-icons/md";
 import "../styles/alumnos.css";
 import defaultAvatar from "../assets/avatar.jpg";
-import RutinaCard from "./RutinaCard";
 import { getRutinasPorAlumno } from "../api/rutinas.js";
+import RutinaCard from "./RutinaCard.jsx";
 
 const AlumnoCard = ({
                         alumno,
@@ -199,7 +199,12 @@ const AlumnoCard = ({
             <div className="progreso-container">
                 <div className="progreso-header">
                     <span className="progreso-label">Progreso</span>
-                    <span className="progreso-value">{progress}%</span>
+                    <span
+                        className="progreso-value"
+                        style={{ color: getProgressColor(progress) }}
+                    >
+      {progress >= 100 ? "Completado" : `${progress}%`}
+    </span>
                 </div>
                 <div className="progreso">
                     <div
@@ -207,10 +212,16 @@ const AlumnoCard = ({
                         style={{
                             width: `${progress}%`,
                             backgroundColor: getProgressColor(progress),
+                            transition: "width 0.4s ease, background-color 0.3s ease",
                         }}
                     />
                 </div>
+                {progress >= 100 && (
+                    <p className="text-success text-center mt-1 small fw-semibold">🎉 Rutina completada</p>
+                )}
+
             </div>
+
 
             {/* ACCIONES */}
             <div className="acciones">
@@ -236,7 +247,7 @@ const AlumnoCard = ({
                     }
                 >
                     <FaComments size={14} />
-                    Stats
+                    Chat
                 </button>
             </div>
 
@@ -262,7 +273,8 @@ const AlumnoCard = ({
                                 <RutinaCard
                                     key={r.id}
                                     rutina={r}
-                                    onClick={() => console.log("Abrir detalle", r.id)}
+                                    onClick={(id) => console.log("Abrir detalle", id)}
+                                    onEdit={(rutina) => console.log("Editar rutina", rutina)}
                                 />
                             ))}
                         </div>

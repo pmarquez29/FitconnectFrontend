@@ -229,15 +229,23 @@ const RutinaAsignadaDetailModal = ({ show, onHide, asignacionId, alumno }) => {
                                     <ListGroup variant="flush">
                                         {asignacion.ejercicios.map((ej) => (
                                             <ListGroup.Item key={ej.id}>
-                                                <h6 className="fw-bold mb-1">{ej.nombre}</h6>
-                                                <div className="small text-muted">
-                                                    <FaWeightHanging className="me-1" />
-                                                    {ej.series}x{ej.repeticiones} rep •{" "}
-                                                    <FaStopwatch className="me-1" />
-                                                    {ej.tiempo_descanso || 0}s descanso
+                                                <div className="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 className="fw-bold mb-1">{ej.nombre}</h6>
+                                                        <div className="small text-muted">
+                                                            <FaWeightHanging className="me-1" />
+                                                            {ej.series}x{ej.repeticiones} rep •{" "}
+                                                            <FaStopwatch className="me-1" />
+                                                            {ej.tiempo_descanso || 0}s descanso
+                                                        </div>
+                                                    </div>
+                                                    <Badge bg={ej.completado ? "success" : "secondary"}>
+                                                        {ej.completado ? "Hecho" : "Pendiente"}
+                                                    </Badge>
                                                 </div>
                                             </ListGroup.Item>
                                         ))}
+
                                     </ListGroup>
                                 </Card.Body>
                             </Card>

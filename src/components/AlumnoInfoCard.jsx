@@ -3,29 +3,41 @@ import { useNavigate } from "react-router-dom";
 import { getAlumnoDetalles } from "../api/alumnos";
 import "../styles/mensajes.css";
 import AssignRutinaModal from "./AssignRutinaModal";
+import RegistrarProgresoModal from "./RegistrarProgresoModal";
 import { createReminder } from "../api/notifications";
 import Swal from "sweetalert2";
-import RegistrarProgresoModal from "./RegistrarProgresoModal.jsx";
-
 
 const AlumnoInfoCard = ({ alumno }) => {
     const navigate = useNavigate();
     const [info, setInfo] = useState(null);
     const [loading, setLoading] = useState(false);
-
     const [showAssignModal, setShowAssignModal] = useState(false);
-
     const [showProgresoModal, setShowProgresoModal] = useState(false);
 
+    useEffect(() => {
+        if (!alumno) return;
+        const fetchInfo = async () => {
+            try {
+                setLoading(true);
+                const data = await getAlumnoDetalles(alumno.id || alumno.usuario_id);
+                setInfo(data);
+            } catch (err) {
+                console.error("Error cargando detalles del alumno:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchInfo();
+    }, [alumno]);
 
     const handleProgramarRecordatorio = async () => {
         const { value: formValues } = await Swal.fire({
             title: "Programar recordatorio",
             html: `
-            <input id="titulo" class="swal2-input" placeholder="Título del recordatorio">
-            <textarea id="mensaje" class="swal2-textarea" placeholder="Mensaje para el alumno"></textarea>
-            <input id="fecha" type="date" class="swal2-input" />
-        `,
+                <input id="titulo" class="swal2-input" placeholder="Título del recordatorio">
+                <textarea id="mensaje" class="swal2-textarea" placeholder="Mensaje para el alumno"></textarea>
+                <input id="fecha" type="date" class="swal2-input" />
+            `,
             focusConfirm: false,
             preConfirm: () => ({
                 titulo: document.getElementById("titulo").value,
@@ -34,7 +46,7 @@ const AlumnoInfoCard = ({ alumno }) => {
             }),
             showCancelButton: true,
             confirmButtonText: "Guardar",
-            cancelButtonText: "Cancelar"
+            cancelButtonText: "Cancelar",
         });
 
         if (formValues) {
@@ -53,72 +65,6 @@ const AlumnoInfoCard = ({ alumno }) => {
         }
     };
 
-    const handleRegistrarProgreso = async () => {
-        const { value: formValues } = await Swal.fire({
-            title: "Registrar progreso manual",
-            html: `
-        <input id="asignacion" class="swal2-input" placeholder="ID de asignación">
-        <input id="ejercicio" class="swal2-input" placeholder="ID de ejercicio">
-        <input id="series" class="swal2-input" placeholder="Series completadas">
-        <input id="reps" class="swal2-input" placeholder="Repeticiones realizadas">
-        <input id="peso" class="swal2-input" placeholder="Peso utilizado (kg)">
-        <textarea id="notas" class="swal2-textarea" placeholder="Notas adicionales"></textarea>
-        <label style="display:flex;align-items:center;gap:5px;justify-content:center;margin-top:8px;">
-            <input type="checkbox" id="completado"> Completado
-        </label>
-        `,
-            focusConfirm: false,
-            preConfirm: () => ({
-                asignacion_id: document.getElementById("asignacion").value,
-                ejercicio_id: document.getElementById("ejercicio").value,
-                series_completadas: document.getElementById("series").value,
-                repeticiones_realizadas: document.getElementById("reps").value,
-                peso_utilizado: document.getElementById("peso").value,
-                notas: document.getElementById("notas").value,
-                completado: document.getElementById("completado").checked,
-                alumno_id: alumno.id || alumno.usuario_id,
-            }),
-            showCancelButton: true,
-            confirmButtonText: "Registrar",
-            cancelButtonText: "Cancelar"
-        });
-
-        if (formValues) {
-            try {
-                await createManualProgress(formValues);
-                Swal.fire("✅ Progreso registrado", "El avance fue guardado correctamente", "success");
-            } catch (err) {
-                console.error("Error registrando progreso:", err);
-                Swal.fire("Error", "No se pudo registrar el progreso", "error");
-            }
-        }
-    };
-
-    const handleRutinaAssigned = () => {
-        setShowAssignModal(false);
-        // Actualizar rutinas luego de asignar
-        setTimeout(() => window.location.reload(), 1000);
-    };
-
-
-    useEffect(() => {
-        if (!alumno) return;
-
-        const fetchInfo = async () => {
-            try {
-                setLoading(true);
-                const data = await getAlumnoDetalles(alumno.id || alumno.usuario_id);
-                setInfo(data);
-            } catch (err) {
-                console.error("Error cargando detalles del alumno:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchInfo();
-    }, [alumno]);
-
     if (!alumno) {
         return (
             <div className="alumno-info-card empty">
@@ -129,9 +75,9 @@ const AlumnoInfoCard = ({ alumno }) => {
 
     if (loading) return <div className="alumno-info-card">Cargando información...</div>;
 
-    const usuario = info?.Usuario || alumno;
-    const rutinas = info?.AsignacionRutinas || [];
-    const disciplina = usuario?.Disciplina?.nombre || "SIN DISCIPLINA";
+    const usuario = info || alumno;
+    const disciplina = usuario?.disciplina || "Sin disciplina";
+    const rutinas = usuario?.rutinas || [];
 
     return (
         <div className="alumno-info-card">
@@ -148,6 +94,11 @@ const AlumnoInfoCard = ({ alumno }) => {
                 <div className="alumno-details">
                     <h3>{usuario?.nombre} {usuario?.apellido}</h3>
                     <p className="alumno-email">{usuario?.email}</p>
+                    <p>
+                        <strong>Objetivo:</strong> {usuario?.objetivo || "No definido"} <br />
+                        <strong>Nivel:</strong> {usuario?.nivel_experiencia || "No especificado"} <br />
+                        <strong>Peso:</strong> {usuario?.peso || "?"} kg – <strong>Altura:</strong> {usuario?.altura || "?"} cm
+                    </p>
                 </div>
             </div>
 
@@ -155,28 +106,55 @@ const AlumnoInfoCard = ({ alumno }) => {
                 <h5>📋 HISTORIAL DE RUTINAS</h5>
 
                 {rutinas.length > 0 ? (
-                    rutinas.map((r) => (
-                        <div key={r.id} className="rutina-item">
-                            <div className="rutina-header">
-                                <span className={`estado ${r.estado?.toLowerCase()}`}>
-                                    {r.Rutina?.nombre}
-                                </span>
-                                <span className="estado-text">
-                                    {r.estado || "Activa"} - {r.progreso || 0}%
-                                </span>
+                    <div className="rutinas-scroll">
+                        {rutinas.map((r) => (
+                            <div key={r.id} className="rutina-item">
+                                <div className="rutina-header">
+            <span className="estado">
+              {r.Rutina?.nombre || `Rutina #${r.rutina_id}`}
+            </span>
+                                    <span className={`estado-text ${r.estado?.toLowerCase() || "activa"}`}>
+              {r.estado || "Activa"} — {r.progreso || 0}%
+            </span>
+                                </div>
+
+                                <small className="text-muted">
+                                    Asignada el{" "}
+                                    {new Date(r.fecha_asignacion).toLocaleDateString("es-BO", {
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "numeric",
+                                    })}
+                                </small>
+
+                                <div className="progress-bar">
+                                    <div
+                                        className={`progress ${r.estado?.toLowerCase() || "activa"}`}
+                                        style={{
+                                            width: `${r.progreso || 0}%`,
+                                            background:
+                                                r.progreso >= 100
+                                                    ? "#16a34a"
+                                                    : r.progreso >= 50
+                                                        ? "#2563eb"
+                                                        : "#93c5fd",
+                                        }}
+                                    ></div>
+                                </div>
+
+                                {r.Rutina && (
+                                    <div className="rutina-detalle small mt-1">
+                                        <p className="text-muted">{r.Rutina.objetivo}</p>
+                                    </div>
+                                )}
                             </div>
-                            <div className="progress-bar">
-                                <div
-                                    className={`progress ${r.estado?.toLowerCase() || "activa"}`}
-                                    style={{ width: `${r.progreso || 0}%` }}
-                                ></div>
-                            </div>
-                        </div>
-                    ))
+                        ))}
+                    </div>
                 ) : (
-                    <p>No tiene rutinas registradas.</p>
+                    <p className="text-muted">No tiene rutinas asignadas.</p>
                 )}
             </div>
+
 
             <div className="acciones">
                 <button
@@ -185,29 +163,35 @@ const AlumnoInfoCard = ({ alumno }) => {
                 >
                     👤 Ver perfil completo
                 </button>
-                <button className="btn btn-secondary" onClick={() => setShowAssignModal(true)}>
-                    ➕ Asignar nueva rutina
-                </button>
-
-                <button className="btn btn-secondary" onClick={() => setShowProgresoModal(true)}>
-                    ✅ Registrar progreso manual
-                </button>
-
 
                 <button
                     className="btn btn-secondary"
-                    onClick={() => handleProgramarRecordatorio()}
+                    onClick={() => setShowAssignModal(true)}
+                >
+                    ➕ Asignar nueva rutina
+                </button>
+
+                <button
+                    className="btn btn-secondary"
+                    onClick={() => setShowProgresoModal(true)}
+                >
+                    ✅ Registrar progreso manual
+                </button>
+
+                <button
+                    className="btn btn-secondary"
+                    onClick={handleProgramarRecordatorio}
                 >
                     ⏰ Programar recordatorio
                 </button>
-
             </div>
 
+            {/* Modales */}
             <AssignRutinaModal
                 show={showAssignModal}
                 onHide={() => setShowAssignModal(false)}
                 alumno={alumno}
-                onRutinaAssigned={handleRutinaAssigned}
+                onRutinaAssigned={() => window.location.reload()}
             />
 
             <RegistrarProgresoModal
@@ -215,11 +199,8 @@ const AlumnoInfoCard = ({ alumno }) => {
                 onHide={() => setShowProgresoModal(false)}
                 alumno={alumno}
             />
-
-
         </div>
     );
-
 };
 
 export default AlumnoInfoCard;

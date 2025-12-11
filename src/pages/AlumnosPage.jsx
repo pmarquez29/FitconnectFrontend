@@ -18,7 +18,7 @@ import DeleteConfirmationModal from "../components/EliminarAlumnoModal";
 import { getAlumnos, toggleAlumnoStatus } from "../api/alumnos";
 
 // Styles
-import "../styles/layout.css";
+
 import "../styles/alumnos.css";
 
 const AlumnosPage = () => {

@@ -1,83 +1,352 @@
+/* === Perfil General === */
+.content {
+    background: #f8fafc;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.alumno-datos, .rutina-resumen, .historial-rutinas,
+.comparativo-rutinas, .progreso-chart, .actividad-reciente {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.alumno-datos:hover, .rutina-resumen:hover, .historial-rutinas:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+}
+
+h3 {
+    color: #1e293b;
+    border-left: 4px solid #2563eb;
+    padding-left: 10px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+p, td, th {
+    color: #334155;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table thead {
+    background: #eff6ff;
+}
+
+table th, table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+table tr:hover {
+    background: #f8fafc;
+}
+
+/* === Rutina resumen === */
+.rutina-box {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    color: white;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+}
+
+.rutina-box h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.rutina-box ul li {
+    list-style: disc;
+    margin-left: 1.5rem;
+}
+
+/* === Charts === */
+.progreso-chart, .comparativo-rutinas {
+    height: 380px;
+}
+
+/* === Perfil Header === */
 .perfil-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin: 1rem 0;
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
 }
 
 .perfil-header img {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     object-fit: cover;
+    margin-right: 1.5rem;
 }
 
-.alumno-datos {
-    background: white;
+.perfil-header-info h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1e293b;
+}
+
+.perfil-header-info p {
+    color: #64748b;
+}
+
+/* === LAYOUT GENERAL === */
+.content.perfil-page {
+    background: #f1f5f9; /* Fondo gris muy suave para contraste */
+    min-height: 100vh;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.perfil-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* === HEADER NUEVO (Estilo Tarjeta) === */
+.perfil-header.nuevo {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e2e8f0;
+}
+
+.perfil-avatar.grande {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #eff6ff;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+}
+
+.perfil-header-info h2 {
+    font-size: 1.8rem;
+    color: #0f172a; /* Color oscuro fuerte */
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.perfil-mini-datos {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.75rem;
+    color: #64748b; /* Gris medio legible */
+    font-size: 0.95rem;
+}
+
+/* === TARJETAS GENERALES === */
+.perfil-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s ease;
+}
+
+.perfil-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.perfil-card h3 {
+    color: #1e293b; /* Título oscuro */
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-left: 4px solid #3b82f6;
+    padding-left: 0.75rem;
+}
+
+/* === SECCIÓN GRID SUPERIOR === */
+.perfil-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Mitad y mitad */
+    gap: 1.5rem;
+}
+
+/* === 🌟 NUEVA ESTÉTICA DE DATOS FÍSICOS (Visual) === */
+.datos-grid-visual {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 Columnas */
+    gap: 1rem;
+}
+
+.dato-item {
+    background: #f8fafc;
     padding: 1rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+/* Ocupar todo el ancho si es necesario (ej: Objetivo) */
+.dato-item.full-width {
+    grid-column: span 2;
+}
+
+.dato-item .label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #64748b;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.dato-item .valor {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a; /* Texto muy oscuro para legibilidad */
+    margin: 0;
+    line-height: 1.2;
+}
+
+.dato-item .valor small {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-left: 2px;
+}
+
+.dato-item .valor.texto-pequeno {
+    font-size: 1rem; /* Para textos largos como objetivo */
+}
+
+/* Cajas de iconos de colores */
+.icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+.icon-box.blue { background: #dbeafe; color: #2563eb; }
+.icon-box.green { background: #dcfce7; color: #16a34a; }
+.icon-box.orange { background: #ffedd5; color: #ea580c; }
+.icon-box.purple { background: #f3e8ff; color: #9333ea; }
+.icon-box.red { background: #fee2e2; color: #dc2626; }
+
+/* === RUTINA RESUMEN (Corrección de colores) === */
+.rutina-box.compacta {
+    background: #f8fafc; /* Fondo claro */
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    color: #334155; /* Texto oscuro, NO BLANCO */
+}
+
+.rutina-box.compacta h4 {
+    color: #1e40af; /* Azul oscuro */
     margin-bottom: 1rem;
+    font-size: 1.1rem;
 }
 
-.rutina-resumen .rutina-box {
-    background: white;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+/* Grid dentro de la rutina */
+.rutina-box .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
     margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed #cbd5e1;
 }
 
-.progreso-chart, .actividad-reciente {
-    background: white;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    margin: 1rem 0;
+.rutina-box .info-item {
+    font-size: 0.85rem;
+    color: #475569;
+    display: flex;
+    flex-direction: column; /* Icono arriba texto abajo para ahorrar espacio */
+    align-items: flex-start;
+    gap: 2px;
+}
+.rutina-box .info-item svg {
+    color: #3b82f6;
+    margin-bottom: 2px;
 }
 
-.actividad-reciente table {
-    width: 100%;
-    border-collapse: collapse;
+.lista-ejercicios.moderna li {
+    color: #334155; /* Texto oscuro */
+    font-size: 0.9rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+}
+.lista-ejercicios.moderna li:last-child {
+    border-bottom: none;
+}
+.lista-ejercicios.moderna .punto {
+    background: #3b82f6;
+    min-width: 6px;
+    height: 6px;
+    margin-right: 8px;
 }
 
-.actividad-reciente th, .actividad-reciente td {
-    border: 1px solid #e5e7eb;
-    padding: 0.5rem;
-    text-align: center;
+/* === TABLAS Y GRÁFICOS (Asegurando legibilidad) === */
+.perfil-tablas th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+.perfil-tablas td {
+    color: #1e293b; /* Texto oscuro */
 }
 
-.actividad-reciente th {
-    background: #f3f4f6;
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+    .perfil-grid {
+        grid-template-columns: 1fr; /* Una sola columna en tablets/móviles */
+    }
+
+    .perfil-header.nuevo {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .perfil-mini-datos {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .datos-grid-visual {
+        /* En móvil, mantener 2 columnas para datos pequeños se ve bien */
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
-.historial-rutinas {
-    background: white;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    margin: 1rem 0;
-}
 
-.historial-rutinas table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 0.5rem;
-}
 
-.historial-rutinas th, .historial-rutinas td {
-    border: 1px solid #e5e7eb;
-    padding: 0.5rem;
-    text-align: center;
-}
-
-.historial-rutinas th {
-    background: #f3f4f6;
-}
-.comparativo-rutinas {
-    background: white;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    margin: 1rem 0;
-}

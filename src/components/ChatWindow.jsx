@@ -13,29 +13,29 @@ const ChatWindow = ({ chat, user }) => {
     const [nuevoMensaje, setNuevoMensaje] = useState("");
     const messagesEndRef = useRef(null);
 
-    // ✅ Cargar mensajes iniciales del chat
     useEffect(() => {
         if (chat) {
             Promise.all([
                 getMensajes(chat.usuario.id),
-                getRemindersByAlumno(chat.usuario.id)
+                getRemindersByAlumno(chat.usuario.id),
             ]).then(([mensajes, recordatorios]) => {
                 const remindersAsMsgs = recordatorios.map((r) => ({
                     contenido: `🕒 ${r.titulo}\n${r.mensaje}`,
                     fecha_envio: r.created_at,
                     tipo: "recordatorio",
+                    remitente_id: 0, // ✅ sistema
                 }));
-                setMensajes([...mensajes, ...remindersAsMsgs].sort(
-                    (a, b) => new Date(a.fecha_envio) - new Date(b.fecha_envio)
-                ));
+                setMensajes(
+                    [...mensajes, ...remindersAsMsgs].sort(
+                        (a, b) => new Date(a.fecha_envio) - new Date(b.fecha_envio)
+                    )
+                );
             });
         }
     }, [chat]);
 
-    // ✅ Escuchar mensajes en tiempo real
     useEffect(() => {
         socket.on("nuevoMensaje", (msg) => {
-            // Solo agregar si pertenece a este chat
             if (
                 msg.remitente_id === chat?.usuario?.id ||
                 msg.destinatario_id === chat?.usuario?.id
@@ -58,7 +58,6 @@ const ChatWindow = ({ chat, user }) => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [mensajes]);
 
-    // ✅ Enviar mensaje
     const handleSend = (e) => {
         e.preventDefault();
         if (!nuevoMensaje.trim()) return;
@@ -81,7 +80,6 @@ const ChatWindow = ({ chat, user }) => {
 
     return (
         <div className="chat-window">
-            {/* Header */}
             <div className="chat-header">
                 <img
                     src={chat.usuario.foto || "/assets/avatar.jpg"}
@@ -94,36 +92,43 @@ const ChatWindow = ({ chat, user }) => {
                 </div>
             </div>
 
-            {/* Mensajes */}
             <div className="chat-messages">
-                {mensajes.map((msg, i) => (
-                    <div
-                        key={i}
-                        className={`mensaje-bubble ${
-                            msg.tipo === "recordatorio"
-                                ? "sistema"
-                                : msg.remitente_id === user.id
-                                    ? "propio"
-                                    : "ajeno"
-                        }`}
-                    >
-                        <p>{msg.contenido}</p>
-                    </div>
+                {mensajes.map((msg, i) => {
+                    const isSystem = msg.tipo === "recordatorio" || msg.remitente_id === 0;
+                    const isOwn = msg.remitente_id === user.id;
 
-                ))}
+                    return (
+                        <div
+                            key={i}
+                            className={`mensaje-bubble ${
+                                isSystem ? "sistema propio" : isOwn ? "propio" : "ajeno"
+                            }`}
+                        >
+                            {isSystem && <span className="sistema-icon">📅</span>}
+                            <p>{msg.contenido}</p>
+                            <span className="hora">
+                            {new Date(msg.fecha_envio).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                            })}
+                          </span>
+                        </div>
+                    );
+                })}
+
                 <div ref={messagesEndRef}></div>
             </div>
 
-            {/* Input */}
             <form className="chat-input" onSubmit={handleSend}>
-                <button type="button" className="attach-btn">📎</button>
                 <input
                     type="text"
                     placeholder="Escribe un mensaje..."
                     value={nuevoMensaje}
                     onChange={(e) => setNuevoMensaje(e.target.value)}
                 />
-                <button type="submit" className="send-btn">➤</button>
+                <button type="submit" className="send-btn">
+                    ➤
+                </button>
             </form>
         </div>
     );

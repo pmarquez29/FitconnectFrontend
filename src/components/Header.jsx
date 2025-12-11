@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import avatar from "../assets/avatar.jpg";
-import "../styles/header.css"; // 👈 nuevo CSS separado
+import avatarDefault from "../assets/avatar.jpg";
+import { FaBell, FaChevronDown } from "react-icons/fa";
+import "../styles/header.css";
 
-const Header = ({ onToggleSidebar }) => {
+const Header = () => {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || {});
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
@@ -10,11 +11,14 @@ const Header = ({ onToggleSidebar }) => {
 
     // 🔹 Cerrar menús al hacer clic fuera
     useEffect(() => {
-        const handleProfileUpdate = (e) => {
-            if (e.detail) setUser(e.detail);
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setShowUserMenu(false);
+                setShowNotifications(false);
+            }
         };
-        window.addEventListener("profileUpdated", handleProfileUpdate);
-        return () => window.removeEventListener("profileUpdated", handleProfileUpdate);
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     // 🔹 Escucha actualizaciones del perfil global
@@ -26,54 +30,61 @@ const Header = ({ onToggleSidebar }) => {
         return () => window.removeEventListener("profileUpdated", handleProfileUpdate);
     }, []);
 
-    // 🔹 Convertir foto tipo Buffer -> Base64
+    // 🔹 CORRECCIÓN: Convertir foto de forma segura (sin RangeError)
     const getFotoSrc = (foto) => {
         try {
-            if (!foto) return avatar;
+            if (!foto) return avatarDefault;
 
-            // Si viene como string base64
+            // Caso 1: String Base64 directo
             if (typeof foto === "string") return `data:image/jpeg;base64,${foto}`;
 
-            // Si viene como objeto tipo Buffer (desde backend)
-            if (foto?.data && Array.isArray(foto.data)) {
-                const uint8Array = new Uint8Array(foto.data);
-                let binary = "";
-                for (let i = 0; i < uint8Array.length; i++) {
-                    binary += String.fromCharCode(uint8Array[i]);
+            // Caso 2: Buffer desde Backend (Aquí estaba el error)
+            if (foto?.data) {
+                const bytes = new Uint8Array(foto.data);
+                let binary = '';
+                // Usamos un bucle for para evitar desbordamiento de pila (Stack Overflow)
+                const len = bytes.byteLength;
+                for (let i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
                 }
-                const base64String = window.btoa(binary);
-                return `data:image/jpeg;base64,${base64String}`;
+                return `data:image/jpeg;base64,${window.btoa(binary)}`;
             }
 
-            // Si viene como base64 anidado en foto.base64
+            // Caso 3: Objeto anidado raro
             if (foto?.base64) return `data:image/jpeg;base64,${foto.base64}`;
 
-            return avatar;
+            return avatarDefault;
         } catch (err) {
             console.error("❌ Error convirtiendo foto:", err);
-            return avatar;
+            return avatarDefault;
         }
     };
 
+    const handleLogout = () => {
+        localStorage.clear();
+        window.location.href = "/";
+    };
 
     return (
         <header className="app-header">
-            <button className="hamburger" aria-label="Abrir menú" onClick={onToggleSidebar}>
-                ☰
-            </button>
-
+            {/* Título de la Plataforma */}
             <h1 className="app-title">FitConnect</h1>
 
             <div className="header-actions" ref={menuRef}>
                 {/* 🔔 Notificaciones */}
                 <div
                     className="notification"
-                    onClick={() => setShowNotifications(!showNotifications)}
+                    onClick={() => {
+                        setShowNotifications(!showNotifications);
+                        setShowUserMenu(false);
+                    }}
                 >
-                    🔔
+                    <FaBell />
+
                     {showNotifications && (
                         <div className="dropdown notifications">
-                            <p>Sin notificaciones nuevas</p>
+                            <p style={{margin: 0, fontWeight: "600"}}>🎉 ¡Todo al día!</p>
+                            <small>No tienes notificaciones nuevas</small>
                         </div>
                     )}
                 </div>
@@ -81,7 +92,10 @@ const Header = ({ onToggleSidebar }) => {
                 {/* 👤 Usuario */}
                 <div
                     className="user-section"
-                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    onClick={() => {
+                        setShowUserMenu(!showUserMenu);
+                        setShowNotifications(false);
+                    }}
                 >
                     <img
                         src={getFotoSrc(user?.foto)}
@@ -94,20 +108,15 @@ const Header = ({ onToggleSidebar }) => {
                             {user?.rol === "instructor" ? "Instructor" : "Usuario"}
                         </small>
                     </div>
+                    <FaChevronDown size={12} color="#94a3b8" />
 
                     {showUserMenu && (
                         <div className="dropdown user-menu">
                             <button onClick={() => (window.location.href = "/configuracion")}>
-                                Configuración
+                                ⚙️ Configuración
                             </button>
-                            <button
-                                onClick={() => {
-                                    localStorage.removeItem("token");
-                                    localStorage.removeItem("user");
-                                    window.location.href = "/";
-                                }}
-                            >
-                                Cerrar sesión
+                            <button onClick={handleLogout}>
+                                🚪 Cerrar sesión
                             </button>
                         </div>
                     )}

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom"; // 👈 Importante
+import { useSearchParams } from "react-router-dom";
 import { getChats } from "../api/chat";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import ChatList from "../components/ChatList";
 import ChatWindow from "../components/ChatWindow";
 import AlumnoInfoCard from "../components/AlumnoInfoCard";
-import "../styles/layout.css";
 import "../styles/mensajes.css";
 
 const MensajesPage = () => {

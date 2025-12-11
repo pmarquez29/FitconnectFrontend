@@ -1,0 +1,170 @@
+.modal-pro .modal-content {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.modal-pro .modal-header {
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    color: white;
+    border-bottom: none;
+    padding: 1.5rem;
+}
+
+.modal-pro .modal-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+}
+
+.modal-pro .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.modal-pro .modal-body {
+    background-color: #f8fafc;
+    padding: 2rem;
+}
+
+/* Selector de Ejercicio */
+.select-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    margin-bottom: 1.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+.form-label-pro {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #64748b;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.custom-select {
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    color: #1e293b;
+    transition: border-color 0.2s;
+}
+
+.custom-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Info Card (Ejercicio seleccionado) */
+.info-card {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.info-card h6 {
+    color: #1e40af;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.info-card p {
+    font-size: 0.9rem;
+    color: #334155;
+    margin: 0;
+}
+
+/* Grid de Inputs */
+.inputs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+.input-group-pro {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    z-index: 2;
+}
+
+.form-control-pro {
+    padding-left: 2.5rem; /* Espacio para el icono */
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    font-weight: 500;
+    color: #0f172a;
+}
+
+.form-control-pro:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.full-width {
+    grid-column: span 2;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+}
+.empty-icon {
+    font-size: 3rem;
+    color: #16a34a;
+    margin-bottom: 1rem;
+}
+
+/* Botones */
+.modal-footer-custom {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+.btn-cancel:hover { background: #e2e8f0; }
+
+.btn-submit {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transition: transform 0.2s;
+}
+.btn-submit:hover { transform: translateY(-2px); }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

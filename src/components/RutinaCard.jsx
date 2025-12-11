@@ -1,110 +1,126 @@
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import {
+    FaClock,
+    FaDumbbell,
+    FaBullseye,
+    FaCheckCircle,
+    FaRunning,
+    FaPauseCircle
+} from "react-icons/fa";
 import "../styles/rutinas.css";
 
 const RutinaCard = ({ rutina, onClick }) => {
-    // Detectar si es rutina asignada o del catálogo
-    const esAsignada = !!rutina.alumno;
+    // 1. Normalización de datos (Defensa contra datos nulos o estructuras anidadas)
+    const nombre = rutina.nombre || rutina.Rutina?.nombre || "Rutina sin nombre";
+    const objetivo = rutina.objetivo || rutina.Rutina?.objetivo || "General";
+    // Intenta obtener la disciplina del objeto plano o del objeto anidado
+    const disciplina = rutina.disciplina_nombre || rutina.Rutina?.Disciplina?.nombre || rutina.disciplina || "Fitness";
+    const duracion = rutina.duracion_estimada || rutina.Rutina?.duracion_estimada || 0;
+    const frecuencia = rutina.frecuencia_semanal || rutina.Rutina?.frecuencia_semanal;
 
-    const estado = rutina.estado?.toLowerCase() || "activa";
+    // 2. Progreso y Estado
+    const rawProgreso = Number(rutina.progreso) || 0;
+    const [progreso, setProgreso] = useState(0);
 
-    const colores = {
-        activa: "linear-gradient(135deg, #9dffb0, #5ad67d)",
-        pendiente: "linear-gradient(135deg, #ffe37d, #ffb347)",
-        atrasada: "linear-gradient(135deg, #ff8a8a, #d64545)",
-        completada: "linear-gradient(135deg, #8ad0ff, #4a90e2)",
+    // Animación de carga del progreso
+    useEffect(() => {
+        const timer = setTimeout(() => setProgreso(rawProgreso), 300);
+        return () => clearTimeout(timer);
+    }, [rawProgreso]);
+
+    // Determinar estado visual
+    const estado = progreso >= 100 ? "completada" : (rutina.estado?.toLowerCase() || "activa");
+
+    // Configuración de colores según estado
+    const config = {
+        activa: {
+            gradient: "linear-gradient(135deg, #10b981, #059669)", // Verde esmeralda
+            icon: <FaRunning />,
+            barColor: "#10b981"
+        },
+        pendiente: {
+            gradient: "linear-gradient(135deg, #f59e0b, #d97706)", // Ámbar
+            icon: <FaDumbbell />,
+            barColor: "#f59e0b"
+        },
+        pausada: {
+            gradient: "linear-gradient(135deg, #6b7280, #4b5563)", // Gris
+            icon: <FaPauseCircle />,
+            barColor: "#6b7280"
+        },
+        completada: {
+            gradient: "linear-gradient(135deg, #3b82f6, #2563eb)", // Azul
+            icon: <FaCheckCircle />,
+            barColor: "#3b82f6"
+        },
     };
 
+    const currentConfig = config[estado] || config.activa;
+
     return (
-        <div
-            className="rutina-card shadow"
-            onClick={() => onClick(rutina.id)}
+        <motion.div
+            whileHover={{ y: -5 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rutina-card-pro"
+            onClick={() => onClick && onClick(rutina.id)}
         >
-            {/* HEADER CON COLOR */}
-            <div
-                style={{
-                    background: colores[estado] || "#f3f4f6",
-                    borderRadius: "12px",
-                    padding: "0.6rem 1rem",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "0.8rem",
-                }}
-            >
-                <h4 style={{ color: "#111827", fontWeight: 700, margin: 0 }}>
-                    {rutina.nombre}
-                </h4>
-                <span
-                    className="estado"
-                    style={{
-                        background: "rgba(255,255,255,0.4)",
-                        padding: "0.25rem 0.6rem",
-                        borderRadius: "6px",
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                    }}
-                >
-                    {estado.toUpperCase()}
+            {/* HEADER */}
+            <div className="rutina-card-header">
+                <div className="rutina-icon" style={{ background: currentConfig.gradient }}>
+                    {currentConfig.icon}
+                </div>
+                <span className={`estado-badge-pro ${estado}`}>
+                    {estado === "completada" ? "COMPLETADA" : estado.toUpperCase()}
                 </span>
             </div>
 
-            {/* CUERPO */}
-            <div className="rutina-body">
-                <p className="nivel">Nivel: {rutina.nivel || "N/A"}</p>
-                <p>🎯 {rutina.objetivo || "Sin objetivo"}</p>
-                <p>
-                    ⏱️ {rutina.duracion_estimada || 0} min /{" "}
-                    {rutina.frecuencia_semanal || "—"}
-                </p>
+            {/* INFO */}
+            <div className="rutina-info">
+                <div className="disciplina-badge">
+                    {disciplina.toUpperCase()}
+                </div>
 
-                {/* Mostrar datos del alumno si aplica */}
-                {esAsignada && rutina.alumno && (
-                    <div
-                        style={{
-                            background: "#f9fafb",
-                            borderRadius: "10px",
-                            padding: "0.6rem 0.8rem",
-                            marginTop: "0.8rem",
-                        }}
-                    >
-                        <p
-                            style={{
-                                fontWeight: 600,
-                                color: "#2563eb",
-                                marginBottom: "0.2rem",
-                            }}
-                        >
-                            👤 {rutina.alumno.nombre}
+                <h3 className="rutina-nombre" title={nombre}>
+                    {nombre}
+                </h3>
+
+                <div className="rutina-detalles">
+                    <p>
+                        <FaBullseye className="text-primary" />
+                        <span>{objetivo}</span>
+                    </p>
+                    <p>
+                        <FaClock className="text-warning" />
+                        <span>{duracion} min / sesión</span>
+                    </p>
+                    {frecuencia && (
+                        <p>
+                            <FaDumbbell className="text-secondary" />
+                            <span>{frecuencia}</span>
                         </p>
-                        <small style={{ color: "#6b7280" }}>
-                            {rutina.alumno.email}
-                        </small>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
 
             {/* PROGRESO */}
-            <div className="progreso">
-                <div className="barra">
-                    <div
-                        className="relleno"
-                        style={{ width: `${rutina.progreso || 0}%` }}
-                    ></div>
+            <div className="progreso-container">
+                <div className="progreso-info">
+                    <span>Avance actual</span>
+                    <span className="fw-bold text-dark">{progreso}%</span>
                 </div>
-                <small>{rutina.progreso || 0}% completado</small>
+                <div className="progreso-barra">
+                    <div
+                        className="progreso-relleno"
+                        style={{
+                            width: `${progreso}%`,
+                            background: currentConfig.gradient,
+                        }}
+                    />
+                </div>
             </div>
-
-            {/* ACCIONES */}
-            <div className="acciones">
-                {esAsignada ? (
-                    <>
-                        <button className="btn-registrar">Registrar</button>
-                        <button className="btn-detalles">Detalles</button>
-                    </>
-                ) : (
-                    <button className="btn-detalles">Editar</button>
-                )}
-            </div>
-        </div>
+        </motion.div>
     );
 };
 
