@@ -1,544 +1,579 @@
 /* ===============================
-   💬 MENSAJES LAYOUT PRINCIPAL
+   💬 LAYOUT PRINCIPAL (GRID)
 =============================== */
 .mensajes-container {
     display: grid;
-    grid-template-columns: 300px 1fr 340px;
-    height: calc(100vh - 80px);
-    background: #f4f6f8;
-    border-radius: 12px;
-    overflow: hidden;
+    grid-template-columns: 320px 1fr 350px; /* Columnas fijas + flexible */
+    height: calc(100vh - 90px); /* Altura fija respecto al viewport */
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden; /* IMPORTANTE: Evita que el grid crezca más allá del 100vh */
+    border: 1px solid #e5e7eb;
 }
 
-@media (max-width: 1024px) {
+/* Responsive */
+@media (max-width: 1200px) {
     .mensajes-container {
-        grid-template-columns: 260px 1fr;
+        grid-template-columns: 280px 1fr;
     }
-}
-
-@media (max-width: 768px) {
-    .mensajes-container {
-        grid-template-columns: 1fr;
-        height: auto;
-    }
+    /* Ocultamos info card en pantallas medianas si es necesario, o la movemos */
 }
 
 /* ===============================
-   🧭 CHAT LIST
+   1. CHAT LIST (Columna Izquierda)
 =============================== */
 .chat-list {
-    background: #ffffff;
-    border-right: 1px solid #e0e0e0;
+    background: #fff;
+    border-right: 1px solid #f0f0f0;
     display: flex;
     flex-direction: column;
+    height: 100%; /* Ocupa todo el alto del grid */
 }
 
 .chat-list-header {
-    padding: 1rem;
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.chat-list-header h2 {
+    font-size: 1.25rem;
     font-weight: 700;
-    color: #1a237e;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: center;
+    color: #111827;
+    margin: 0 0 1rem 0;
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
 }
 
 .chat-search {
-    border: none;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 0.8rem 1rem;
-    font-size: 0.95rem;
-    outline: none;
+    width: 100%;
+    padding: 10px 10px 10px 36px; /* espacio para icono */
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
     background: #f9fafb;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.chat-search:focus {
+    border-color: #2563eb;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .chat-items {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: auto; /* Scroll independiente */
     list-style: none;
-    margin: 0;
     padding: 0;
+    margin: 0;
 }
 
 .chat-item {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    padding: 0.8rem 1rem;
-    cursor: pointer;
-    border-bottom: 1px solid #f3f4f6;
-    transition: background 0.2s, transform 0.1s;
-}
-
-.chat-item.active {
-    background: #e0ebff;
-    border-left: 4px solid #2563eb;
-}
-
-.chat-avatar {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.chat-info strong {
-    font-size: 0.95rem;
-    color: #111827;
-}
-
-.chat-info p {
-    margin: 0;
-    font-size: 0.8rem;
-    color: #6b7280;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.chat-time {
-    font-size: 0.75rem;
-    color: #9ca3af;
-}
-
-/* ===============================
-   💬 CHAT WINDOW
-=============================== */
-.chat-window {
-    display: flex;
-    flex-direction: column;
-    background: #f9fafb;
-    border-right: 1px solid #e0e0e0;
-}
-
-.chat-header {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
     padding: 1rem;
-    background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.chat-header h3 {
-    margin: 0;
-    color: #1f2937;
-}
-
-.status {
-    color: #10b981;
-    font-size: 0.8rem;
-}
-
-.chat-messages {
-    flex: 1;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    overflow-y: auto;
-}
-
-/* Mensajes */
-.mensaje-bubble {
-    max-width: 70%;
-    padding: 0.8rem 1rem;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    position: relative;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.mensaje-bubble.propio {
-    align-self: flex-end;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: white;
-    border-bottom-right-radius: 4px;
-}
-
-.mensaje-bubble.ajeno {
-    align-self: flex-start;
-    background: #e5e7eb;
-    color: #111827;
-    border-bottom-left-radius: 4px;
-}
-
-.mensaje-bubble.sistema {
-    align-self: flex-start;
-    background-color: #e8f4ff;
-    color: #004085;
-    border-left: 4px solid #2563eb;
-    font-style: italic;
-}
-
-.hora {
-    display: block;
-    font-size: 0.7rem;
-    color: #9ca3af;
-    margin-top: 4px;
-    text-align: right;
-}
-
-/* Input */
-.chat-input {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    background: white;
-    border-top: 1px solid #e5e7eb;
-}
-
-.chat-input input {
-    flex: 1;
-    border: none;
-    background: #f3f4f6;
-    border-radius: 12px;
-    padding: 0.6rem 1rem;
-    outline: none;
-    font-size: 0.9rem;
-}
-
-.send-btn {
-    background: #2563eb;
-    color: white;
-    border: none;
-    font-size: 1.2rem;
-    margin-left: 0.5rem;
-    border-radius: 8px;
-    width: 38px;
-    height: 38px;
     cursor: pointer;
+    border-bottom: 1px solid #f9fafb;
     transition: background 0.2s;
 }
 
-.send-btn:hover {
-    background: #1d4ed8;
+.chat-item:hover {
+    background: #f8fafc;
 }
 
-/* ===============================
-   🧍 ALUMNO INFO CARD
-=============================== */
-.alumno-info-card {
-    background: #ffffff;
-    border-left: 1px solid #e0e0e0;
-    padding: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+.chat-item.active {
+    background: #eff6ff;
+    border-right: 3px solid #2563eb;
 }
 
-.alumno-header {
-    background: linear-gradient(135deg, #2563eb, #42a5f5);
-    color: white;
-    width: 100%;
-    border-radius: 8px;
-    padding: 0.5rem 0;
-    font-weight: 600;
-    margin-bottom: 1rem;
+.chat-avatar-container {
+    position: relative;
+    margin-right: 12px;
 }
 
-.alumno-avatar {
-    width: 100%;
-    height: 90%;
+.chat-avatar {
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #90caf9;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.alumno-details h3 {
-    margin: 0.5rem 0 0.2rem;
-    color: #111827;
-}
-
-.alumno-details p {
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
-/* ===============================
-   🧩 Rutinas del Alumno (Historial)
-=============================== */
-.rutinas-historial {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    flex: 1;
-    margin-bottom: 0.5rem;
-}
-
-.rutinas-historial h5 {
-    color: #1e3a8a;
-    font-weight: 600;
-    margin-bottom: 0.8rem;
-}
-
-.rutinas-scroll {
-    flex: 1;
-    overflow-y: auto;
-    max-height: 280px; /* evita que crezca infinito */
-    padding-right: 6px;
-}
-
-.rutina-item {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    padding: 0.8rem;
-    margin-bottom: 0.8rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.rutina-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
-}
-
-.rutina-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #1f2937;
-}
-
-.estado-text {
-    font-size: 0.85rem;
-    color: #2563eb;
-}
-
-.estado-text.finalizada {
-    color: #16a34a;
-}
-
-.estado-text.pausada {
-    color: #eab308;
-}
-
-.text-muted {
-    color: #6b7280;
-    font-size: 0.8rem;
-}
-
-/* Barra de progreso */
-.progress-bar {
-    width: 100%;
-    height: 6px;
-    background: #e5e7eb;
-    border-radius: 6px;
-    margin-top: 0.5rem;
-    overflow: hidden;
-}
-
-.progress {
-    height: 100%;
-    border-radius: 6px;
-    transition: width 0.3s ease;
-}
-
-.progress.finalizada {
-    background: #16a34a;
-}
-
-.progress.activa {
-    background: #2563eb;
-}
-
-.progress.pausada {
-    background: #eab308;
-}
-
-/* Rutina detalle */
-.rutina-detalle {
-    margin-top: 0.4rem;
-    font-size: 0.85rem;
-    color: #374151;
-}
-
-
-.acciones {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    margin-top: auto;
-    width: 100%;
-}
-
-.btn {
-    border: none;
-    border-radius: 10px;
-    padding: 0.7rem 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-family: "Inter", sans-serif;
-}
-
-/* Botón principal */
-.btn-primary {
-    background: linear-gradient(135deg, #2563eb, #1e40af);
-    color: #fff;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
-}
-
-.btn-primary:hover {
-    background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
-    box-shadow: 0 6px 12px rgba(29, 78, 216, 0.25);
-    transform: translateY(-2px);
-}
-
-/* Botón secundario */
-.btn-secondary {
-    background: #f3f4f6;
-    color: #111827;
-    border: 1px solid #d1d5db;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.btn-secondary:hover {
-    background: #e5e7eb;
-    transform: translateY(-1px);
-}
-
-/* Iconos más vistosos dentro de los botones */
-.btn::before {
-    font-size: 1.1rem;
-}
-
-.sistema-icon {
+.online-badge {
     position: absolute;
-    left: 0.8rem;
-    top: 0.7rem;
-    font-size: 1.2rem;
-}
-
-.alumno-info-card {
-    display: flex;
-    flex-direction: column;
-    background: #fff;
-    border-left: 1px solid #e0e0e0;
-    overflow: hidden;
-}
-
-.alumno-content-scroll {
-    flex: 1;
-    overflow-y: auto;
-    width: 100%;
-    padding-bottom: 1rem;
-    scroll-behavior: smooth;
-}
-
-.chat-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.8rem;
-    padding: 0.8rem 1rem;
-    border-bottom: 1px solid #f3f4f6;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-}
-
-.chat-item:hover {
-    background: #f1f5ff;
-    transform: scale(1.01);
-}
-
-.chat-item-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
+    bottom: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    background: #22c55e;
+    border: 2px solid #fff;
+    border-radius: 50%;
 }
 
 .chat-info {
     flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
 }
 
-.chat-meta {
-    text-align: right;
+.chat-name-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.chat-name-row strong {
+    font-size: 0.95rem;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.chat-date {
     font-size: 0.75rem;
     color: #9ca3af;
-    min-width: 50px;
+}
+
+.chat-preview {
+    font-size: 0.85rem;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
 }
 
 /* ===============================
-   💬 CHAT WINDOW BUBBLES
+   2. CHAT WINDOW (Columna Central)
 =============================== */
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    background: #f8fafc; /* Fondo ligeramente gris para diferenciar */
+    height: 100%;
+    min-height: 0; /* CRUCIAL para scroll flex anidado */
+}
 
+.chat-window.empty {
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+}
+
+.chat-header {
+    padding: 1rem 1.5rem;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    flex-shrink: 0; /* No encoger header */
+}
+
+.chat-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #111827;
+}
+
+/* Área de Mensajes (Scrollable) */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    scroll-behavior: smooth;
+}
+
+/* Burbujas */
 .mensaje-bubble {
-    max-width: 75%;
-    padding: 0.75rem 1rem;
-    border-radius: 16px;
-    font-size: 0.92rem;
-    line-height: 1.4;
+    max-width: 70%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    line-height: 1.5;
     position: relative;
-    font-family: "Inter", sans-serif;
     word-wrap: break-word;
-    animation: fadeIn 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Mensajes del instructor (propios) */
 .mensaje-bubble.propio {
     align-self: flex-end;
-    background: linear-gradient(135deg, #2563eb, #1e3a8a);
-    color: #f9fafb;
-    border-bottom-right-radius: 4px;
-    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+    background: #2563eb;
+    color: white;
+    border-bottom-right-radius: 2px;
 }
 
-/* Mensajes del alumno (ajenos) */
 .mensaje-bubble.ajeno {
     align-self: flex-start;
-    background: #f1f5f9;
+    background: #fff;
     color: #1f2937;
-    border-bottom-left-radius: 4px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    border-bottom-left-radius: 2px;
 }
 
-/* Notificaciones o recordatorios */
 .mensaje-bubble.sistema {
-    align-self: flex-end; /* ahora se muestra del lado del instructor */
-    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    align-self: center;
+    background: #eff6ff;
     color: #1e40af;
-    border-left: 4px solid #3b82f6;
-    font-style: italic;
-    font-family: "Poppins", sans-serif;
-    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
-    animation: glowPulse 2s infinite ease-in-out;
+    border: 1px dashed #bfdbfe;
+    font-size: 0.85rem;
+    text-align: center;
+    width: 90%;
+    max-width: 90%;
 }
 
-@keyframes glowPulse {
-    0% { box-shadow: 0 0 6px rgba(59, 130, 246, 0.2); }
-    50% { box-shadow: 0 0 12px rgba(59, 130, 246, 0.4); }
-    100% { box-shadow: 0 0 6px rgba(59, 130, 246, 0.2); }
-}
-
-/* Mejor contraste de texto */
-.mensaje-bubble p {
-    margin: 0;
-    color: inherit;
-    font-weight: 400;
-}
-
-/* Hora pequeña */
 .hora {
     display: block;
     font-size: 0.7rem;
-    color: #9ca3af;
-    margin-top: 3px;
+    margin-top: 4px;
     text-align: right;
+    opacity: 0.8;
 }
 
+/* Input Area */
+.chat-input-area {
+    padding: 1rem;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+    flex-shrink: 0; /* No encoger input */
+}
+
+.chat-input-form {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 24px;
+    background: #f9fafb;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.chat-input:focus {
+    border-color: #2563eb;
+    background: #fff;
+}
+
+.send-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.send-btn:hover {
+    transform: scale(1.05);
+    background: #1d4ed8;
+}
+
+/* ===============================
+   3. ALUMNO INFO CARD (Columna Derecha)
+=============================== */
+.alumno-info-card {
+    background: #fff;
+    border-left: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.alumno-info-card.empty {
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    color: #9ca3af;
+}
+
+.alumno-scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 1rem;
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* ✅ SOLUCIÓN TAMAÑO AVATAR */
+.profile-avatar {
+    width: 80px;  /* Ancho fijo */
+    height: 80px; /* Alto fijo */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #eff6ff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 0.8rem;
+}
+
+.profile-header h3 {
+    margin: 0;
+    color: #111827;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.profile-email {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.disciplina-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: #f9fafb;
+    padding: 0.6rem;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #f3f4f6;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.7rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.stat-value {
+    font-weight: 700;
+    color: #1f2937;
+    font-size: 0.95rem;
+}
+
+/* Historial Rutinas */
+.section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.rutina-mini-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
+}
+
+.rutina-mini-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.rutina-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #374151;
+}
+
+.rutina-status {
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.rutina-status.activa { color: #2563eb; }
+.rutina-status.finalizada { color: #16a34a; }
+
+.mini-progress-track {
+    width: 100%;
+    height: 4px;
+    background: #f3f4f6;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.mini-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+}
+
+/* Botones Acción Fixed Bottom */
+.acciones-container {
+    padding: 1rem;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.btn-action {
+    width: 100%;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-primary { background: #2563eb; color: white; }
+.btn-primary:hover { background: #1d4ed8; }
+
+.btn-outline { background: #fff; border: 1px solid #d1d5db; color: #374151; }
+.btn-outline:hover { background: #f9fafb; border-color: #9ca3af; }
+
+/* ===============================
+   🚨 SWEET ALERT CUSTOM DESIGN
+=============================== */
+
+/* Contenedor Principal (Tarjeta) */
+.swal-custom-popup {
+    border-radius: 20px !important;
+    padding: 2rem !important;
+    font-family: 'Inter', sans-serif !important; /* Asegura tu fuente */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Título */
+.swal-custom-title {
+    font-size: 1.5rem !important;
+    color: #111827 !important;
+    font-weight: 700 !important;
+    margin-bottom: 1rem !important;
+}
+
+/* Layout del Formulario Interno */
+.swal-form-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    text-align: left;
+    margin-top: 0.5rem;
+}
+
+.swal-field-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    margin-left: 4px;
+}
+
+/* Inputs Personalizados */
+.swal-custom-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f9fafb;
+    font-size: 0.95rem;
+    color: #1f2937;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box; /* Evita desbordes */
+}
+
+.swal-custom-input:focus {
+    background: #fff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* Botón Confirmar (Azul) */
+.btn-swal-confirm {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+    color: white !important;
+    padding: 12px 24px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+    margin: 0 8px !important;
+    transition: transform 0.2s !important;
+}
+
+.btn-swal-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4) !important;
+}
+
+/* Botón Cancelar (Gris) */
+.btn-swal-cancel {
+    background: #f3f4f6 !important;
+    color: #4b5563 !important;
+    padding: 12px 24px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    border: 1px solid #e5e7eb !important;
+    margin: 0 8px !important;
+    transition: background 0.2s !important;
+}
+
+.btn-swal-cancel:hover {
+    background: #e5e7eb !important;
+    color: #1f2937 !important;
+}
+
+/* Mensaje de error */
+.swal-custom-validation {
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    font-size: 0.9rem !important;
+    padding: 0.8rem !important;
+    border-radius: 8px !important;
+    margin-top: 1rem !important;
+    display: flex;
+    justify-content: center;
+}

@@ -136,26 +136,31 @@
     color: var(--fit-blue);
 }
 
-/* AVATAR */
+/* --- AVATAR (Mantenido Grande) --- */
 .avatar-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 0 14px 0;
+    margin-top: 25px; /* Espacio para no chocar con el dropdown */
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .alumno-foto {
-    width: 90px;
-    height: 90px;
+    width: 130px !important;
+    height: 130px !important;
     border-radius: 50%;
-    border: 3px solid #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 5px solid #fff; /* Borde más grueso */
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.25); /* Sombra más bonita */
     object-fit: cover;
-    transition: transform 0.3s ease;
+    background-color: #f1f5f9;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .alumno-card:hover .alumno-foto {
     transform: scale(1.08);
+    border-color: #eff6ff;
 }
 
 /* NOMBRE */

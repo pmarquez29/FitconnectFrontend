@@ -133,9 +133,9 @@ const AddAlumnoModal = ({ isOpen, onClose, onAlumnoAdded }) => {
                                 onChange={handleChange}
                             >
                                 <option value="">Seleccionar...</option>
-                                <option value="M">Masculino</option>
-                                <option value="F">Femenino</option>
-                                <option value="O">Otro</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Otro">Otro</option>
                             </Form.Select>
                         </div>
 

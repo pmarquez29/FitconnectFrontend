@@ -83,6 +83,21 @@ const AlumnoCard = ({
         }
     };
 
+    // ✅ LÓGICA DE IMAGEN MEJORADA
+    const getAvatarSrc = () => {
+        if (imageError) return defaultAvatar;
+
+        let foto = alumno.foto || alumno.Usuario?.foto;
+
+        if (!foto) return defaultAvatar;
+
+        if (typeof foto === 'string' && (foto.startsWith("data:image") || foto.startsWith("http"))) {
+            return foto;
+        }
+
+        return defaultAvatar;
+    };
+
     return (
         <div className="alumno-card">
             {/* DROPDOWN EN LA ESQUINA - MÍNIMO ESPACIO */}
@@ -129,20 +144,16 @@ const AlumnoCard = ({
                 </div>
             </div>
 
-            {/* AVATAR */}
+            {/* ✅ 3. AVATAR GRANDE Y VISIBLE */}
             <div className="avatar-container">
                 <img
-                    src={
-                        !imageError && alumno.foto
-                            ? alumno.foto.startsWith("data:image") ||
-                            alumno.foto.startsWith("http")
-                                ? alumno.foto
-                                : defaultAvatar
-                            : defaultAvatar
-                    }
+                    src={getAvatarSrc()}
                     alt={`${alumno.nombre} ${alumno.apellido}`}
                     className="alumno-foto"
-                    onError={() => setImageError(true)}
+                    onError={(e) => {
+                        e.target.onerror = null; // Prevenir loop infinito
+                        setImageError(true);
+                    }}
                 />
             </div>
 
