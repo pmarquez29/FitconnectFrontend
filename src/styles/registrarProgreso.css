@@ -86,35 +86,53 @@
 .inputs-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
+    gap: 1.5rem;
 }
 
 .input-group-pro {
     position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
 
 .input-icon {
     position: absolute;
-    left: 12px;
+    left: 15px; /* Ajustado ligeramente */
     top: 50%;
     transform: translateY(-50%);
     color: #94a3b8;
-    z-index: 2;
+    z-index: 10;
+    font-size: 1.1rem;
+    pointer-events: none; /* Permite escribir aunque des clic encima del icono */
 }
 
+/* ✅ CORRECCIÓN PRINCIPAL: Input Styles */
 .form-control-pro {
-    padding-left: 2.5rem; /* Espacio para el icono */
-    border-radius: 10px;
-    border: 1px solid #cbd5e1;
+    width: 100%;
+    /* El padding-left 45px empuja el texto para que no choque con el icono */
+    padding-left: 45px !important;
+    padding-right: 15px;
     padding-top: 0.7rem;
     padding-bottom: 0.7rem;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
     font-weight: 500;
     color: #0f172a;
+    background-color: #ffffff;
+    transition: all 0.2s;
+}
+
+/* ✅ AJUSTE PARA TEXTAREA (Notas) */
+textarea.form-control-pro {
+    height: auto !important;
+    padding-top: 15px; /* Espacio arriba para que el texto no pegue con el borde */
 }
 
 .form-control-pro:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    outline: none;
 }
 
 .full-width {
@@ -167,4 +185,14 @@
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .inputs-grid {
+        grid-template-columns: 1fr;
+    }
+    .full-width {
+        grid-column: span 1;
+    }
 }

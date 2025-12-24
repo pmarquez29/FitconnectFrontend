@@ -152,6 +152,7 @@ const AlumnoPerfilPage = () => {
                         <div className="perfil-card">
                             <ProgresoChart data={progreso} />
                         </div>
+                        <br/>
                         <div className="perfil-card">
                             <ComparativoRutinas data={comparativo} />
                         </div>
@@ -161,6 +162,7 @@ const AlumnoPerfilPage = () => {
                         <div className="perfil-card">
                             <HistorialRutinas historial={historial} />
                         </div>
+                        <br/>
                         <div className="perfil-card">
                             <ActividadReciente actividades={actividad} />
                         </div>

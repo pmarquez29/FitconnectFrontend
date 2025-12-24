@@ -6,8 +6,7 @@ import DashboardCards from "../components/DashboardCards";
 import RecentActivity from "../components/RecentActivity";
 import TopStudents from "../components/TopStudents";
 import WeeklyProgressChart from "../components/WeeklyProgressChart";
-import { Grid, Box, CircularProgress } from "@mui/material";
-import "../styles/layout.css";
+import { Grid, Box, CircularProgress, Container } from "@mui/material";
 import "../styles/dashboard.css";
 
 const DashboardPage = () => {
@@ -33,7 +32,7 @@ const DashboardPage = () => {
     if (loading)
         return (
             <Box className="loading-container">
-                <CircularProgress color="primary" />
+                <CircularProgress size={60} thickness={4} sx={{ color: "#2563eb" }} />
             </Box>
         );
 
@@ -48,15 +47,26 @@ const DashboardPage = () => {
 
             <main className="content">
                 <Header />
+                <br/>
+                <Box sx={{ pb: 4, maxWidth: '1600px', margin: '0 auto' }}>
+                    {/* 1. Tarjetas de Resumen (KPIs) */}
+                    <Box sx={{ mb: 4 }}>
+                        <DashboardCards data={data} />
+                    </Box>
 
-                {/* Tarjetas de resumen */}
-                <DashboardCards data={data} />
-                <RecentActivity actividad={data?.actividad_reciente || []} />
+                    <RecentActivity actividad={data?.actividad_reciente || []} />
+                    <br/>
+                    <Grid container spacing={3} sx={{ mb: 4 }}>
+                        <Grid item xs={12} lg={8}>
+                            <WeeklyProgressChart data={data?.progreso_semanal || []} />
+                        </Grid>
+                        <Grid item xs={12} lg={4}>
+                            <TopStudents estudiantes={data?.mejor_estudiantes || []} />
+                        </Grid>
+                    </Grid>
 
-                <Grid container columns={2} spacing={2} >
-                        <WeeklyProgressChart data={data?.progreso_semanal || []} />
-                        <TopStudents estudiantes={data?.mejor_estudiantes || []} />
-                </Grid>
+
+                </Box>
             </main>
         </div>
     );

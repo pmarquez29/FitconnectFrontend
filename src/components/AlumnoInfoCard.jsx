@@ -32,7 +32,6 @@ const AlumnoInfoCard = ({ alumno }) => {
         fetchInfo();
     }, [alumno]);
 
-    // ✅ FUNCIÓN CORREGIDA Y ROBUSTA PARA EL AVATAR
     const getAvatarSrc = (usuario) => {
         if (!usuario) return "/assets/avatar.jpg";
 
@@ -111,7 +110,6 @@ const AlumnoInfoCard = ({ alumno }) => {
             try {
                 await createReminder(alumno.id || alumno.usuario_id, formValues.titulo, formValues.mensaje, formValues.fecha);
 
-                // Alerta de éxito también estilizada
                 await Swal.fire({
                     icon: 'success',
                     title: '¡Guardado!',

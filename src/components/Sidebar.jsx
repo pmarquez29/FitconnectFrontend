@@ -9,7 +9,7 @@ import {
     MdMenu,
 } from "react-icons/md";
 import { IoStatsChart } from "react-icons/io5";
-import { GiWeightLiftingUp, GiMuscleUp } from "react-icons/gi"; // 👈 Importamos GiMuscleUp
+import { GiWeightLiftingUp, GiMuscleUp } from "react-icons/gi";
 import logo from "../assets/logo.png";
 import "../styles/sidebar.css";
 
@@ -52,13 +52,15 @@ const Sidebar = ({
             <aside className={`sidebar ${open ? "open" : ""} ${collapsed ? "collapsed" : ""}`}>
                 {/* HEADER */}
                 <div className="sidebar-header">
-                    {!collapsed && <img src={logo} alt="FitConnect" className="sidebar-logo" />}
+                    <div className="logo-container">
+                        {!collapsed && <img src={logo} alt="FitConnect" className="sidebar-logo" />}
+                    </div>
                     <button
                         className="collapse-btn"
                         onClick={() => setCollapsed(!collapsed)}
                         title={collapsed ? "Expandir" : "Colapsar"}
                     >
-                        {collapsed ? <MdMenu size={24} /> : <MdMenuOpen size={24} />}
+                        {collapsed ? <MdMenu size={28} /> : <MdMenuOpen size={28} />}
                     </button>
                 </div>
 
@@ -74,10 +76,20 @@ const Sidebar = ({
                                     title={collapsed ? link.label : ""}
                                 >
                                     <div className="nav-content">
-                                        <span className="nav-label">{link.label}</span>
+                                        {/* 1. TEXTO A LA IZQUIERDA (Original) */}
+                                        {!collapsed && (
+                                            <span className="nav-label">{link.label}</span>
+                                        )}
+
+                                        {/* 2. ICONO A LA DERECHA (Original) */}
                                         <div className="nav-icon-wrapper">
                                             <link.icon className="nav-icon" />
-                                            {link.badge > 0 && <span className="nav-badge">{link.badge}</span>}
+                                            {/* Badge */}
+                                            {link.badge > 0 && (
+                                                <span className={collapsed ? "nav-badge-dot" : "nav-badge"}>
+                                                    {!collapsed && link.badge}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </NavLink>
@@ -88,19 +100,21 @@ const Sidebar = ({
 
                 {/* FOOTER */}
                 <div className="sidebar-footer">
-                    {/* 🛠️ AQUÍ ESTÁ EL CAMBIO: Icono MuscleUp restaurado */}
                     <div className="user-info">
-                        <GiMuscleUp className="user-icon-muscle" size={28} />
+                        <div className="avatar-wrapper">
+                            <GiMuscleUp className="user-icon-muscle" size={28} />
+                        </div>
                         {!collapsed && (
                             <div className="user-details">
                                 <span className="user-role">Tu Panel</span>
-                                <span className="user-status">En línea</span>
+                                <span className="user-status">● En línea</span>
                             </div>
                         )}
                     </div>
 
                     <button className="logout-btn" onClick={handleLogout} title="Cerrar sesión">
-                        <span>Cerrar Sesión</span>
+                        {/* Texto primero, luego icono (como lo tenías) */}
+                        {!collapsed && <span>Cerrar Sesión</span>}
                         <MdLogout size={22} />
                     </button>
                 </div>

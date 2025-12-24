@@ -38,7 +38,7 @@ const AlumnoCard = ({
             VOLLEY: "#17a2b8",
             BASQUET: "#dc3545",
         };
-        return colors[disciplina?.toUpperCase()] || "#6c757d";
+        return colors[disciplina?.toUpperCase()] || "#000000";
     };
 
     const getProgressColor = (progress) => {

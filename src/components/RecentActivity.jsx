@@ -1,94 +1,145 @@
-// ✅ RecentActivity.jsx mejorado
+import { useState } from "react";
 import {
     Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper, Chip, Typography, Box, Avatar
+    TableHead, TableRow, Paper, Chip, Typography, Box, Avatar, TablePagination
 } from "@mui/material";
-import { CheckCircle, HourglassBottom, ErrorOutline, PendingActions } from "@mui/icons-material";
+import { CheckCircle, HourglassBottom, ErrorOutline, PendingActions, AccessTime } from "@mui/icons-material";
 
 const statusStyles = {
-    completado: { color: "#16a34a", bg: "#dcfce7", icon: <CheckCircle fontSize="small" /> },
-    pendiente: { color: "#f59e0b", bg: "#fef3c7", icon: <PendingActions fontSize="small" /> },
-    activa: { color: "#2563eb", bg: "#dbeafe", icon: <HourglassBottom fontSize="small" /> },
-    inactiva: { color: "#dc2626", bg: "#fee2e2", icon: <ErrorOutline fontSize="small" /> },
+    completado: { color: "#166534", bg: "#dcfce7", icon: <CheckCircle style={{ fontSize: 16 }} /> },
+    pendiente: { color: "#854d0e", bg: "#fef9c3", icon: <PendingActions style={{ fontSize: 16 }} /> },
+    activa: { color: "#1e40af", bg: "#dbeafe", icon: <HourglassBottom style={{ fontSize: 16 }} /> },
+    inactiva: { color: "#991b1b", bg: "#fee2e2", icon: <ErrorOutline style={{ fontSize: 16 }} /> },
 };
 
 const RecentActivity = ({ actividad }) => {
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
     const getStatus = (estado) => statusStyles[estado?.toLowerCase()] || statusStyles.pendiente;
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const currentRows = actividad ? actividad.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : [];
 
     return (
         <Paper
-            elevation={3}
+            elevation={0}
             sx={{
-                p: 3,
+                p: 0,
                 borderRadius: 4,
-                mb: 3,
-                boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
-                background: "linear-gradient(180deg, #ffffff 0%, #f9fafb 100%)",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+                border: "1px solid #e2e8f0",
+                overflow: "hidden"
             }}
         >
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 700, color: "#2563eb" }}>
-                Actividad Reciente
-            </Typography>
+            <Box sx={{ p: 3, borderBottom: "1px solid #f1f5f9", display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: "#1e293b", display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <AccessTime sx={{ color: "#2563eb" }} /> Actividad Reciente
+                </Typography>
+                <Chip label={`${actividad?.length || 0} Registros`} size="small" sx={{ bgcolor: "#f1f5f9", fontWeight: 600 }} />
+            </Box>
 
             {actividad?.length > 0 ? (
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow sx={{ background: "#f1f5f9" }}>
-                                <TableCell sx={{ fontWeight: 600 }}>Alumno</TableCell>
-                                <TableCell sx={{ fontWeight: 600 }}>Rutina</TableCell>
-                                <TableCell sx={{ fontWeight: 600 }}>Estado</TableCell>
-                                <TableCell sx={{ fontWeight: 600 }}>Fecha</TableCell>
-                                <TableCell sx={{ fontWeight: 600 }}>Hora</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {actividad.map((item, i) => {
-                                const s = getStatus(item.estado);
-                                const date = item.fecha_asignacion
-                                    ? new Date(item.fecha_asignacion)
-                                    : null;
+                <>
+                    <TableContainer>
+                        <Table sx={{ minWidth: 650 }}>
+                            <TableHead>
+                                <TableRow sx={{ backgroundColor: "#f8fafc" }}>
+                                    <TableCell sx={{ fontWeight: 600, color: "#64748b", py: 2 }}>ALUMNO</TableCell>
+                                    <TableCell sx={{ fontWeight: 600, color: "#64748b", py: 2 }}>RUTINA</TableCell>
+                                    <TableCell sx={{ fontWeight: 600, color: "#64748b", py: 2 }}>ESTADO</TableCell>
+                                    <TableCell sx={{ fontWeight: 600, color: "#64748b", py: 2 }}>FECHA</TableCell>
+                                    <TableCell sx={{ fontWeight: 600, color: "#64748b", py: 2 }}>HORA</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {currentRows.map((item, i) => {
+                                    const s = getStatus(item.estado);
+                                    const date = item.fecha_asignacion ? new Date(item.fecha_asignacion) : null;
 
-                                return (
-                                    <TableRow
-                                        key={i}
-                                        sx={{
-                                            "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
-                                            "&:hover": { backgroundColor: "#f0f9ff" },
-                                            transition: "0.2s ease",
-                                        }}
-                                    >
-                                        <TableCell sx={{ fontWeight: 500, display: "flex", alignItems: "center", gap: 1 }}>
-                                            <Avatar sx={{ width: 30, height: 30, bgcolor: "#e0f2fe", color: "#0369a1", fontSize: "0.9rem" }}>
-                                                {item.alumno[0]}
-                                            </Avatar>
-                                            {item.alumno}
-                                        </TableCell>
-                                        <TableCell>{item.rutina}</TableCell>
-                                        <TableCell>
-                                            <Chip
-                                                icon={s.icon}
-                                                label={item.estado?.toUpperCase()}
-                                                sx={{
-                                                    backgroundColor: s.bg,
-                                                    color: s.color,
-                                                    fontWeight: 600,
-                                                    fontSize: "0.8rem",
-                                                }}
-                                            />
-                                        </TableCell>
-                                        <TableCell>{date ? date.toLocaleDateString("es-ES") : "—"}</TableCell>
-                                        <TableCell>{date ? date.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" }) : "—"}</TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                    return (
+                                        <TableRow
+                                            key={i}
+                                            sx={{
+                                                "&:hover": { backgroundColor: "#f8fafc" },
+                                                transition: "background-color 0.2s",
+                                                borderBottom: "1px solid #f1f5f9"
+                                            }}
+                                        >
+                                            <TableCell>
+                                                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                                                    {/* ✅ AVATAR CON FOTO */}
+                                                    <Avatar
+                                                        src={item.foto}
+                                                        alt={item.alumno}
+                                                        sx={{
+                                                            width: 32,
+                                                            height: 32,
+                                                            bgcolor: "#eff6ff",
+                                                            color: "#2563eb",
+                                                            fontSize: "0.85rem",
+                                                            fontWeight: "bold"
+                                                        }}
+                                                    >
+                                                        {item.alumno?.[0] || "?"}
+                                                    </Avatar>
+                                                    <Typography variant="body2" fontWeight={600} color="#334155">
+                                                        {item.alumno}
+                                                    </Typography>
+                                                </Box>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography variant="body2" color="#475569">{item.rutina}</Typography>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Chip
+                                                    icon={s.icon}
+                                                    label={item.estado?.toUpperCase()}
+                                                    size="small"
+                                                    sx={{
+                                                        backgroundColor: s.bg,
+                                                        color: s.color,
+                                                        fontWeight: 700,
+                                                        fontSize: "0.7rem",
+                                                        border: `1px solid ${s.color}20`,
+                                                        height: 24
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell sx={{ color: "#64748b" }}>{date ? date.toLocaleDateString("es-ES") : "—"}</TableCell>
+                                            <TableCell sx={{ color: "#64748b", fontFamily: 'monospace' }}>
+                                                {date ? date.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" }) : "—"}
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={actividad.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        labelRowsPerPage="Filas:"
+                        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+                    />
+                </>
             ) : (
-                <Box sx={{ textAlign: "center", py: 5, color: "#9ca3af" }}>
-                    <PendingActions sx={{ fontSize: 48, mb: 1, color: "#cbd5e1" }} />
-                    <Typography>No hay actividad reciente</Typography>
+                <Box sx={{ textAlign: "center", py: 8, color: "#9ca3af" }}>
+                    <PendingActions sx={{ fontSize: 50, mb: 2, color: "#e2e8f0" }} />
+                    <Typography variant="body1" fontWeight={500}>No hay actividad reciente</Typography>
                 </Box>
             )}
         </Paper>
